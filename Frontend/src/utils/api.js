@@ -11,6 +11,16 @@ export const API_ENDPOINTS = {
     LOGIN: "/auth/login",
     REFRESH: "/auth/refresh",
     ME: "/auth/me",
+    INVITE_DETAILS: (token) => `/auth/invites/${token}`,
+    ACCEPT_INVITE: (token) => `/auth/invites/${token}/accept`,
+  },
+  WORKSPACES: {
+    MEMBERS: "/workspaces/members",
+    MEMBER_ROLE: (memberId) => `/workspaces/members/${memberId}/role`,
+    REMOVE_MEMBER: (memberId) => `/workspaces/members/${memberId}`,
+    INVITES: "/workspaces/invites",
+    RESEND_INVITE: (inviteId) => `/workspaces/invites/${inviteId}/resend`,
+    REVOKE_INVITE: (inviteId) => `/workspaces/invites/${inviteId}`,
   },
 };
 

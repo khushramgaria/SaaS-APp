@@ -140,7 +140,7 @@ export const getInvites = async (req, res, next) => {
       _id: inv._id,
       email: inv.email,
       role: inv.role,
-      createdAt: inv.createdAt,
+      createdAt: inv.updatedAt,
       expiresAt: inv.expiresAt,
       isExpired: new Date() > new Date(inv.expiresAt),
     }));
@@ -225,7 +225,9 @@ export const createInvite = async (req, res, next) => {
         _id: invite._id,
         email: invite.email,
         role: invite.role,
+        createdAt: invite.updatedAt,
         expiresAt: invite.expiresAt,
+        isExpired: false,
         inviteUrl,
       },
     });
