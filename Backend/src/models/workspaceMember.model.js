@@ -19,6 +19,10 @@ const WorkspaceMemberSchema = new mongoose.Schema(
       enum: ["OWNER", "ADMIN", "MEMBER", "VIEWER"],
       default: "MEMBER",
     },
+    joinedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { timestamps: true },
 );

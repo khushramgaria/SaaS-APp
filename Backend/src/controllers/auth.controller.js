@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 import { Workspace } from "../models/workspace.model.js";
 import { WorkspaceMember } from "../models/workspaceMember.model.js";
-import jwt from "jsonwebtoken";
+import { WorkspaceInvite } from "../models/workspaceInvite.model.js";
 
 // Cookie options for secure Refresh Token handling
 const COOKIE_OPTIONS = {
@@ -192,4 +193,118 @@ export const getMe = async (req, res) => {
       workspaces,
     },
   });
+};
+
+// Verify token on Accept Invite screen load
+export const getInviteDetails = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+
+    const invite = await WorkspaceInvite.findOne({ token }).populate(
+      "workspaceId",
+      "name slug",
+    );
+
+    if (!invite) {
+      return res
+        .status(404)
+        .json({
+          success: false,
+          message: "Invalid or expired invitation link.",
+        });
+    }
+
+    if (new Date() > new Date(invite.expiresAt)) {
+      return res
+        .status(410)
+        .json({ success: false, message: "This invitation link has expired." });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        email: invite.email,
+        role: invite.role,
+        workspaceName: invite.workspaceId.name,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Set password, create user, add to workspace atomically
+export const acceptInvite = async (req, res, next) => {
+  const { token } = req.params;
+  const { name, password } = req.body;
+
+  if (!name || !password) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Name and password are required." });
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const invite = await WorkspaceInvite.findOne({ token }).session(session);
+
+    if (!invite || new Date() > new Date(invite.expiresAt)) {
+      await session.abortTransaction();
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired invitation." });
+    }
+
+    // 1. Create User
+    const [user] = await User.create(
+      [{ name, email: invite.email, password }],
+      { session },
+    );
+
+    // 2. Add to WorkspaceMember with assigned role
+    await WorkspaceMember.create(
+      [
+        {
+          workspaceId: invite.workspaceId,
+          userId: user._id,
+          role: invite.role,
+        },
+      ],
+      { session },
+    );
+
+    // 3. Delete invite record
+    await WorkspaceInvite.findByIdAndDelete(invite._id).session(session);
+
+    // 4. Issue auth tokens
+    const accessToken = await user.generateAccessToken();
+    const refreshToken = await user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save({ session });
+
+    await session.commitTransaction();
+
+    res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
+
+    return res.status(201).json({
+      success: true,
+      message: "Account created and joined workspace successfully.",
+      data: {
+        accessToken,
+        user,
+        activeWorkspace: {
+          id: invite.workspaceId,
+          role: invite.role,
+        },
+      },
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    next(error);
+  } finally {
+    session.endSession();
+  }
 };
