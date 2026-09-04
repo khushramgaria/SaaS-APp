@@ -3,6 +3,7 @@ import authReducer from "./slices/authSlice";
 import memberReducer from "./slices/memberSlice";
 import projectReducer from "./slices/projectSlice";
 import taskReducer from "./slices/taskSlice";
+import documentReducer from "./slices/documentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     members: memberReducer,
     projects: projectReducer,
     tasks: taskReducer,
+    documents: documentReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

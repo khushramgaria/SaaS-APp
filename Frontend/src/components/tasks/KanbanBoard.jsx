@@ -9,11 +9,11 @@ import {
 } from "../../redux/slices/taskSlice";
 
 const KANBAN_COLUMNS = [
-  { id: "BACKLOG", title: "Backlog", color: "border-slate-500 text-slate-400 bg-slate-500/10" },
-  { id: "TODO", title: "To Do", color: "border-blue-500 text-blue-400 bg-blue-500/10" },
-  { id: "IN_PROGRESS", title: "In Progress", color: "border-amber-500 text-amber-400 bg-amber-500/10" },
-  { id: "IN_REVIEW", title: "In Review", color: "border-violet-500 text-violet-400 bg-violet-500/10" },
-  { id: "DONE", title: "Done", color: "border-emerald-500 text-emerald-400 bg-emerald-500/10" },
+  { id: "BACKLOG", title: "Backlog", color: "border-slate-500 text-slate-400 bg-slate-500/20" },
+  { id: "TODO", title: "To Do", color: "border-blue-500 text-blue-400 bg-blue-500/20" },
+  { id: "IN_PROGRESS", title: "In Progress", color: "border-amber-500 text-amber-400 bg-amber-500/20" },
+  { id: "IN_REVIEW", title: "In Review", color: "border-violet-500 text-violet-400 bg-violet-500/20" },
+  { id: "DONE", title: "Done", color: "border-emerald-500 text-emerald-400 bg-emerald-500/20" },
 ];
 
 const KanbanBoard = ({ tasks = [], onTaskClick }) => {
@@ -56,61 +56,66 @@ const KanbanBoard = ({ tasks = [], onTaskClick }) => {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 overflow-x-auto pb-6">
-        {KANBAN_COLUMNS.map((col) => {
-          const colTasks = tasksByColumn[col.id] || [];
+      <div className="w-full overflow-x-auto pb-6 pt-1">
+        <div className="flex items-start gap-5 min-w-max pb-2">
+          {KANBAN_COLUMNS.map((col) => {
+            const colTasks = tasksByColumn[col.id] || [];
 
-          return (
-            <div
-              key={col.id}
-              className="flex flex-col bg-slate-950/60 rounded-2xl border border-slate-800/80 p-3 min-w-[260px] h-full"
-            >
-              {/* Column Header */}
-              <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-800/80 px-1">
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`w-2.5 h-2.5 rounded-full border ${col.color}`}
-                  ></div>
-                  <h3 className="font-bold text-sm text-slate-200 tracking-tight">
-                    {col.title}
-                  </h3>
-                </div>
-                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-900 text-slate-400 border border-slate-800">
-                  {colTasks.length}
-                </span>
-              </div>
-
-              {/* Droppable Container */}
-              <Droppable droppableId={col.id}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={`flex-1 min-h-[300px] rounded-xl transition-colors duration-150 p-1 ${
-                      snapshot.isDraggingOver ? "bg-slate-900/60 ring-2 ring-violet-500/20" : ""
-                    }`}
-                  >
-                    {colTasks.map((task, index) => (
-                      <TaskCard
-                        key={task._id}
-                        task={task}
-                        index={index}
-                        onCardClick={onTaskClick}
-                      />
-                    ))}
-                    {provided.placeholder}
-
-                    {colTasks.length === 0 && !snapshot.isDraggingOver && (
-                      <div className="h-28 flex items-center justify-center border-2 border-dashed border-slate-800/60 rounded-xl text-xs text-slate-500 font-medium">
-                        No tasks
-                      </div>
-                    )}
+            return (
+              <div
+                key={col.id}
+                className="flex flex-col bg-slate-900/90 rounded-2xl border border-slate-800/90 p-4 w-[280px] sm:w-[300px] shrink-0 min-h-[520px] shadow-xl"
+              >
+                {/* Column Header */}
+                <div className="flex items-center justify-between gap-2 pb-3.5 mb-3.5 border-b border-slate-800/90 px-1">
+                  <div className="flex items-center gap-2.5">
+                    <div
+                      className={`w-3 h-3 rounded-full border shadow-sm ${col.color}`}
+                    />
+                    <h3 className="font-bold text-sm text-slate-100 tracking-tight">
+                      {col.title}
+                    </h3>
                   </div>
-                )}
-              </Droppable>
-            </div>
-          );
-        })}
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-800/90 text-slate-300 border border-slate-700/60 shadow-inner">
+                    {colTasks.length}
+                  </span>
+                </div>
+
+                {/* Droppable Container */}
+                <Droppable droppableId={col.id}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.droppableProps}
+                      className={`flex-1 min-h-[420px] rounded-xl transition-all duration-150 p-1 flex flex-col ${
+                        snapshot.isDraggingOver
+                          ? "bg-violet-950/20 border border-dashed border-violet-500/40 ring-2 ring-violet-500/20"
+                          : ""
+                      }`}
+                    >
+                      {colTasks.map((task, index) => (
+                        <TaskCard
+                          key={task._id}
+                          task={task}
+                          index={index}
+                          onCardClick={onTaskClick}
+                        />
+                      ))}
+                      {provided.placeholder}
+
+                      {colTasks.length === 0 && !snapshot.isDraggingOver && (
+                        <div className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-slate-800/80 rounded-xl p-6 text-center text-xs text-slate-500 font-medium my-auto min-h-[140px]">
+                          <span>No tasks in {col.title}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </DragDropContext>
   );

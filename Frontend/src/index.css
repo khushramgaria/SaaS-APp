@@ -1,1 +1,217 @@
 @import "tailwindcss";
+
+/* Custom Sleek Dark Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090d16;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 8px;
+  border: 2px solid #090d16;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
+}
+
+/* Firefox scrollbar support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1e293b #090d16;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* TipTap / ProseMirror Editor & Rich Text Content Styles */
+.ProseMirror,
+.prose-editor,
+.prose-content {
+  outline: none !important;
+  min-height: 350px;
+  font-weight: 400 !important;
+}
+
+/* Headings */
+.ProseMirror h1,
+.prose-editor h1,
+.prose-content h1 {
+  font-size: 2rem;
+  line-height: 2.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
+}
+
+.ProseMirror h2,
+.prose-editor h2,
+.prose-content h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.ProseMirror h3,
+.prose-editor h3,
+.prose-content h3 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Paragraphs */
+.ProseMirror p,
+.prose-editor p,
+.prose-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  color: #e2e8f0;
+  font-weight: 400 !important;
+}
+
+/* Bullet Lists */
+.ProseMirror ul,
+.prose-editor ul,
+.prose-content ul {
+  list-style-type: disc !important;
+  padding-left: 1.75rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+/* Numbered / Ordered Lists */
+.ProseMirror ol,
+.prose-editor ol,
+.prose-content ol {
+  list-style-type: decimal !important;
+  padding-left: 1.75rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.ProseMirror li,
+.prose-editor li,
+.prose-content li {
+  margin-bottom: 0.25rem !important;
+  display: list-item !important;
+  font-weight: 400 !important;
+}
+
+/* Nested lists */
+.ProseMirror ul ul,
+.prose-content ul ul {
+  list-style-type: circle !important;
+}
+
+.ProseMirror ul ol,
+.prose-content ul ol {
+  list-style-type: lower-latin !important;
+}
+
+/* Blockquotes */
+.ProseMirror blockquote,
+.prose-editor blockquote,
+.prose-content blockquote {
+  border-left: 4px solid #6366f1;
+  padding-left: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: #cbd5e1;
+  background: rgba(99, 102, 241, 0.08);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-weight: 400;
+}
+
+/* Inline Code */
+.ProseMirror code,
+.prose-editor code,
+.prose-content code {
+  background-color: #1e293b;
+  color: #a5b4fc;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.375rem;
+  font-family: monospace;
+  font-size: 0.875em;
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  font-weight: 400;
+}
+
+/* Code Blocks */
+.ProseMirror pre,
+.prose-editor pre,
+.prose-content pre {
+  background-color: #0f172a;
+  border: 1px solid #1e293b;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  overflow-x: auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.ProseMirror pre code,
+.prose-editor pre code,
+.prose-content pre code {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  color: inherit;
+}
+
+/* Horizontal Rule */
+.ProseMirror hr,
+.prose-editor hr,
+.prose-content hr {
+  border: none;
+  border-top: 1px solid #334155;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Bold & Italic & Strike */
+.ProseMirror strong,
+.prose-editor strong,
+.prose-content strong {
+  font-weight: 700 !important;
+  color: #ffffff;
+}
+
+.ProseMirror em,
+.prose-editor em,
+.prose-content em {
+  font-style: italic;
+}
+
+.ProseMirror s,
+.prose-editor s,
+.prose-content s {
+  text-decoration: line-through;
+  color: #94a3b8;
+}

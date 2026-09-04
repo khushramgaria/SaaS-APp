@@ -11,6 +11,8 @@ import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Tasks from "./pages/Tasks";
 import Documents from "./pages/Documents";
+import DocumentDetail from "./pages/DocumentDetail";
+import DocumentEditor from "./pages/DocumentEditor";
 import Chat from "./pages/Chat";
 import Members from "./pages/Members";
 import Activity from "./pages/Activity";
@@ -55,6 +57,9 @@ function App() {
           <Route path="projects/:projectId" element={<ProjectDetail />} />
           <Route path="tasks" element={<Tasks />} />
           <Route path="documents" element={<Documents />} />
+          <Route path="documents/new" element={<DocumentEditor />} />
+          <Route path="documents/:documentId" element={<DocumentDetail />} />
+          <Route path="documents/:documentId/edit" element={<DocumentEditor />} />
           <Route path="chat" element={<Chat />} />
           <Route path="members" element={<Members />} />
           <Route path="activity" element={<Activity />} />

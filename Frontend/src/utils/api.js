@@ -34,6 +34,12 @@ export const API_ENDPOINTS = {
     STATUS: (taskId) => `/tasks/${taskId}/status`,
     BY_ID: (taskId) => `/tasks/${taskId}`,
   },
+  DOCUMENTS: {
+    LIST: "/documents",
+    CREATE: "/documents",
+    BY_ID: (documentId) => `/documents/${documentId}`,
+    UPLOAD: "/documents/upload",
+  },
 };
 
 // Create Axios Instance
