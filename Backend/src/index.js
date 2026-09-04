@@ -9,7 +9,12 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
 // Mount Swagger interactive explorer
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
