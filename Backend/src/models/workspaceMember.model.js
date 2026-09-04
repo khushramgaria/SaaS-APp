@@ -1,0 +1,32 @@
+import mongoose from "mongoose";
+
+const WorkspaceMemberSchema = new mongoose.Schema(
+  {
+    workspaceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Workspace",
+      required: true,
+      index: true,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+    role: {
+      type: String,
+      enum: ["OWNER", "ADMIN", "MEMBER", "VIEWER"],
+      default: "MEMBER",
+    },
+  },
+  { timestamps: true },
+);
+
+// Prevent duplicate membership in the same workspace
+WorkspaceMemberSchema.index({ workspaceId: 1, userId: 1 }, { unique: true });
+
+export const WorkspaceMember = mongoose.model(
+  "WorkspaceMember",
+  WorkspaceMemberSchema,
+);
