@@ -8,6 +8,7 @@ import Register from "./pages/auth/Register";
 import AcceptInvite from "./pages/auth/AcceptInvite";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
 import Tasks from "./pages/Tasks";
 import Documents from "./pages/Documents";
 import Chat from "./pages/Chat";
@@ -51,6 +52,7 @@ function App() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="projects/:projectId" element={<ProjectDetail />} />
           <Route path="tasks" element={<Tasks />} />
           <Route path="documents" element={<Documents />} />
           <Route path="chat" element={<Chat />} />

@@ -22,6 +22,18 @@ export const API_ENDPOINTS = {
     RESEND_INVITE: (inviteId) => `/workspaces/invites/${inviteId}/resend`,
     REVOKE_INVITE: (inviteId) => `/workspaces/invites/${inviteId}`,
   },
+  PROJECTS: {
+    LIST: "/projects",
+    CREATE: "/projects",
+    BY_ID: (projectId) => `/projects/${projectId}`,
+    MEMBERS: (projectId) => `/projects/${projectId}/members`,
+  },
+  TASKS: {
+    LIST: "/tasks",
+    CREATE: "/tasks",
+    STATUS: (taskId) => `/tasks/${taskId}/status`,
+    BY_ID: (taskId) => `/tasks/${taskId}`,
+  },
 };
 
 // Create Axios Instance
