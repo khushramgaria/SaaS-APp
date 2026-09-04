@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { WorkspaceMember } from "../models/workspaceMember.model.js";
 import jwt from "jsonwebtoken";
 
 export const verifyJWT = async (req, res, next) => {
@@ -23,6 +24,36 @@ export const verifyJWT = async (req, res, next) => {
     }
 
     req.user = user;
+
+    // Multi-tenant context extraction
+    const headerWorkspaceId = req.headers["x-workspace-id"];
+    let membership = null;
+
+    if (headerWorkspaceId) {
+      // 1. Explicit workspace supplied by client
+      membership = await WorkspaceMember.findOne({
+        workspaceId: headerWorkspaceId,
+        userId: user._id,
+      });
+
+      if (!membership) {
+        return res.status(403).json({
+          success: false,
+          message: "Access forbidden. You are not a member of this workspace.",
+        });
+      }
+    } else {
+      // 2. Dev fallback: Pick the user's primary/first workspace automatically
+      membership = await WorkspaceMember.findOne({ userId: user._id });
+    }
+
+    if (membership) {
+      req.workspaceId = membership.workspaceId;
+      req.userRole = membership.role; // 'OWNER' | 'ADMIN' | 'MEMBER' | 'VIEWER'
+    } else {
+      req.workspaceId = null;
+      req.userRole = null;
+    }
 
     next();
   } catch (error) {
