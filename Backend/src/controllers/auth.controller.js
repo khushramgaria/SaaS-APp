@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import {User} from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 import { Workspace } from "../models/workspace.model.js";
 import { WorkspaceMember } from "../models/workspaceMember.model.js";
-import { hashPassword } from "../utils/helper.js";
 import jwt from "jsonwebtoken";
 
 // Cookie options for secure Refresh Token handling
@@ -34,9 +33,7 @@ export const register = async (req, res, next) => {
         .json({ success: false, message: "Email is already registered." });
     }
 
-    // 1. Create global User
-    const passwordHash = await hashPassword(password);
-    const [user] = await User.create([{ name, email, passwordHash }], {
+    const [user] = await User.create([{ name, email, password }], {
       session,
     });
 
