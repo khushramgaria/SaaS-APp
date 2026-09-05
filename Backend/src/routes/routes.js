@@ -6,6 +6,7 @@ import taskRouter from "./task.routes.js";
 import documentRouter from "./document.routes.js";
 import activityRouter from "./activity.routes.js";
 import userRouter from "./user.routes.js";
+import chatRouter from "./chat.routes.js";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use("/tasks", taskRouter);
 router.use("/documents", documentRouter);
 router.use("/activities", activityRouter);
 router.use("/users", userRouter);
+router.use("/chat", chatRouter);
 
 export default router;
