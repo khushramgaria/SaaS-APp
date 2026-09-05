@@ -7,6 +7,7 @@ import { swaggerSpec } from "./config/swagger.config.js";
 import { connectDB } from "./config/db.config.js";
 import routes from "./routes/routes.js";
 import { initSocket } from "./config/socket.config.js";
+import { initEmailWorker } from "./queues/email.queue.js";
 
 const app = express();
 
@@ -40,6 +41,9 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
+
+// Initialize BullMQ worker
+initEmailWorker();
 
 const PORT = process.env.PORT || 3000;
 

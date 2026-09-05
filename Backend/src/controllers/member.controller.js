@@ -5,9 +5,23 @@ import { WorkspaceInvite } from "../models/workspaceInvite.model.js";
 import { sendInviteEmail } from "../services/email.service.js";
 import { logActivity } from "../services/activity.service.js";
 import { generateInviteToken } from "../utils/helper.js";
+import { getCache, setCache, deleteCache } from "../utils/cache.util.js";
+import { emailQueue } from "../queues/email.queue.js";
 
 export const getMembers = async (req, res, next) => {
   try {
+    const cacheKey = `workspace:${req.workspaceId}:members`;
+
+    // Check Redis
+    const cachedMembers = await getCache(cacheKey);
+    if (cachedMembers) {
+      return res.status(200).json({
+        success: true,
+        source: "cache",
+        data: cachedMembers,
+      });
+    }
+
     const members = await WorkspaceMember.find({ workspaceId: req.workspaceId })
       .populate("userId", "name email avatarUrl")
       .sort({ createdAt: 1 });
@@ -24,7 +38,14 @@ export const getMembers = async (req, res, next) => {
         joinedAt: m.createdAt,
       }));
 
-    return res.status(200).json({ success: true, data: formattedMembers });
+    // Save to Redis (TTL: 600s = 10 mins)
+    await setCache(cacheKey, formattedMembers, 600);
+
+    return res.status(200).json({
+      success: true,
+      source: "database",
+      data: formattedMembers,
+    });
   } catch (error) {
     next(error);
   }
@@ -87,6 +108,8 @@ export const updateMemberRole = async (req, res, next) => {
       });
     }
 
+    await deleteCache(`workspace:${req.workspaceId}:members`);
+
     return res.status(200).json({
       success: true,
       message: "Member role updated.",
@@ -126,15 +149,13 @@ export const removeMember = async (req, res, next) => {
       });
     }
 
-    await mongoose.connection
-      .collection("tasks")
-      .updateMany(
-        {
-          workspaceId: req.workspaceId,
-          assigneeId: targetMembership.userId._id,
-        },
-        { $set: { assigneeId: null } },
-      );
+    await mongoose.connection.collection("tasks").updateMany(
+      {
+        workspaceId: req.workspaceId,
+        assigneeId: targetMembership.userId._id,
+      },
+      { $set: { assigneeId: null } },
+    );
 
     await WorkspaceMember.findByIdAndDelete(memberId);
 
@@ -148,6 +169,8 @@ export const removeMember = async (req, res, next) => {
         targetUserEmail: targetMembership.userId.email,
       },
     });
+
+    await deleteCache(`workspace:${req.workspaceId}:members`);
 
     return res.status(200).json({
       success: true,
@@ -233,7 +256,8 @@ export const createInvite = async (req, res, next) => {
 
     const inviteUrl = `${process.env.CLIENT_URL}/accept-invite?token=${token}`;
 
-    await sendInviteEmail({
+    // Push email to BullMQ queue instead of awaiting direct SMTP call
+    await emailQueue.add("SEND_INVITE_EMAIL", {
       toEmail: normalizedEmail,
       workspaceName: req.workspace?.name || "the workspace",
       role,
