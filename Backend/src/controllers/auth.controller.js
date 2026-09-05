@@ -206,12 +206,10 @@ export const getInviteDetails = async (req, res, next) => {
     );
 
     if (!invite) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "Invalid or expired invitation link.",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "Invalid or expired invitation link.",
+      });
     }
 
     if (new Date() > new Date(invite.expiresAt)) {
@@ -286,6 +284,17 @@ export const acceptInvite = async (req, res, next) => {
     await user.save({ session });
 
     await session.commitTransaction();
+
+    logActivity({
+      workspaceId: invite.workspaceId,
+      userId: user._id,
+      action: "MEMBER_JOINED",
+      metadata: {
+        targetUserName: user.name,
+        targetUserEmail: user.email,
+        role: invite.role,
+      },
+    });
 
     res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
 

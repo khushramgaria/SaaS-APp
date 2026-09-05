@@ -1,5 +1,6 @@
 import { Project } from "../models/project.model.js";
 import { Task } from "../models/task.model.js";
+import { logActivity } from "../services/activity.service.js";
 
 export const getProjects = async (req, res, next) => {
   try {
@@ -17,6 +18,7 @@ export const getProjects = async (req, res, next) => {
   }
 };
 
+// Create Project
 export const createProject = async (req, res, next) => {
   try {
     const { name, description, key, leadId, members } = req.body;
@@ -35,12 +37,10 @@ export const createProject = async (req, res, next) => {
     });
 
     if (existingProject) {
-      return res
-        .status(409)
-        .json({
-          success: false,
-          message: "Project key already exists in this workspace.",
-        });
+      return res.status(409).json({
+        success: false,
+        message: "Project key already exists in this workspace.",
+      });
     }
 
     const project = await Project.create({
@@ -50,6 +50,18 @@ export const createProject = async (req, res, next) => {
       key: formattedKey,
       leadId: leadId || req.user._id,
       members: members && members.length > 0 ? members : [req.user._id],
+    });
+
+    // Log Activity: Project Created
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      projectId: project._id,
+      action: "PROJECT_CREATED",
+      metadata: {
+        projectName: project.name,
+        projectKey: project.key,
+      },
     });
 
     return res.status(201).json({ success: true, data: project });
@@ -75,7 +87,6 @@ export const getProjectById = async (req, res, next) => {
         .json({ success: false, message: "Project not found." });
     }
 
-    // Pipeline metrics for the Overview Tab
     const stats = await Task.aggregate([
       { $match: { projectId: project._id } },
       {
@@ -109,6 +120,7 @@ export const getProjectById = async (req, res, next) => {
   }
 };
 
+// Update Project Members
 export const updateProjectMembers = async (req, res, next) => {
   try {
     const { projectId } = req.params;
@@ -125,6 +137,19 @@ export const updateProjectMembers = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Project not found." });
     }
+
+    // Log Activity: Project Members Updated
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      projectId: project._id,
+      action: "PROJECT_MEMBERS_UPDATED",
+      metadata: {
+        projectName: project.name,
+        projectKey: project.key,
+        memberCount: project.members.length,
+      },
+    });
 
     return res.status(200).json({ success: true, data: project });
   } catch (error) {

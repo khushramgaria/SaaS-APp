@@ -36,6 +36,9 @@ import {
 import { fetchTasks, setCurrentTask } from "../redux/slices/taskSlice";
 import { fetchMembers } from "../redux/slices/memberSlice";
 import { fetchDocuments, deleteDocument } from "../redux/slices/documentSlice";
+import { fetchProjectActivities } from "../redux/slices/activitySlice";
+import ActivityTimeline from "../components/activity/ActivityTimeline";
+import { Activity } from "lucide-react";
 
 const getInitials = (name) => {
   if (!name) return "U";
@@ -60,6 +63,9 @@ const ProjectDetail = () => {
     (state) => state.documents
   );
   const { members: workspaceMembers } = useSelector((state) => state.members);
+  const { projectActivities, isLoading: isActivityLoading } = useSelector(
+    (state) => state.activity
+  );
 
   // Default active tab is "overview"
   const [activeTab, setActiveTab] = useState("overview");
@@ -80,6 +86,7 @@ const ProjectDetail = () => {
       dispatch(fetchTasks({ projectId }));
       dispatch(fetchDocuments({ projectId }));
       dispatch(fetchMembers());
+      dispatch(fetchProjectActivities(projectId));
     }
 
     return () => {
@@ -389,6 +396,21 @@ const ProjectDetail = () => {
                   ))}
               </div>
             </div>
+          </div>
+
+          {/* Recent Project Activity Feed Section */}
+          <div className="bg-[#111827] border border-slate-800 rounded-xl p-6 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+              <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                <Activity className="w-5 h-5 text-indigo-400" />
+                <span>Recent Project Activity</span>
+              </h3>
+            </div>
+            <ActivityTimeline
+              activities={projectActivities}
+              isLoading={isActivityLoading}
+              emptyMessage="No activity recorded for this project yet."
+            />
           </div>
         </div>
       )}

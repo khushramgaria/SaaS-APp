@@ -1,7 +1,8 @@
 import { Task } from "../models/task.model.js";
 import { Project } from "../models/project.model.js";
+import { User } from "../models/user.model.js";
+import { logActivity } from "../services/activity.service.js";
 
-// Global or Project-scoped Task list (Newest first)
 export const getTasks = async (req, res, next) => {
   try {
     const { projectId, status, priority, assigneeId, search } = req.query;
@@ -31,7 +32,6 @@ export const getTasks = async (req, res, next) => {
   }
 };
 
-// Create a task without order math
 export const createTask = async (req, res, next) => {
   try {
     const {
@@ -87,13 +87,24 @@ export const createTask = async (req, res, next) => {
       { path: "projectId", select: "name key" },
     ]);
 
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      projectId: task.projectId._id || task.projectId,
+      taskId: task._id,
+      action: "TASK_CREATED",
+      metadata: {
+        taskKey: task.taskKey,
+        taskTitle: task.title,
+      },
+    });
+
     return res.status(201).json({ success: true, data: populated });
   } catch (error) {
     next(error);
   }
 };
 
-// Simple status-only update for Drag & Drop
 export const updateTaskStatus = async (req, res, next) => {
   try {
     const { taskId } = req.params;
@@ -109,40 +120,59 @@ export const updateTaskStatus = async (req, res, next) => {
       });
     }
 
-    const task = await Task.findOneAndUpdate(
-      { _id: taskId, workspaceId: req.workspaceId },
-      { $set: { status } },
-      { new: true },
-    )
-      .populate("assigneeId", "name email avatarUrl")
-      .populate("reporterId", "name email avatarUrl")
-      .populate("projectId", "name key");
+    const existingTask = await Task.findOne({
+      _id: taskId,
+      workspaceId: req.workspaceId,
+    });
 
-    if (!task) {
+    if (!existingTask) {
       return res
         .status(404)
         .json({ success: false, message: "Task not found." });
     }
 
-    return res.status(200).json({ success: true, data: task });
+    const fromStatus = existingTask.status;
+
+    if (fromStatus !== status) {
+      existingTask.status = status;
+      await existingTask.save();
+
+      // Log Activity: Status Updated
+      logActivity({
+        workspaceId: req.workspaceId,
+        userId: req.user._id,
+        projectId: existingTask.projectId,
+        taskId: existingTask._id,
+        action: "TASK_STATUS_UPDATED",
+        metadata: {
+          taskKey: existingTask.taskKey,
+          taskTitle: existingTask.title,
+          fromStatus,
+          toStatus: status,
+        },
+      });
+    }
+
+    const populated = await existingTask.populate([
+      { path: "assigneeId", select: "name email avatarUrl" },
+      { path: "reporterId", select: "name email avatarUrl" },
+      { path: "projectId", select: "name key" },
+    ]);
+
+    return res.status(200).json({ success: true, data: populated });
   } catch (error) {
     next(error);
   }
 };
 
-// General task edit
 export const updateTask = async (req, res, next) => {
   try {
     const { taskId } = req.params;
 
-    const task = await Task.findOneAndUpdate(
-      { _id: taskId, workspaceId: req.workspaceId },
-      { $set: req.body },
-      { new: true, runValidators: true },
-    )
-      .populate("assigneeId", "name email avatarUrl")
-      .populate("reporterId", "name email avatarUrl")
-      .populate("projectId", "name key");
+    const task = await Task.findOne({
+      _id: taskId,
+      workspaceId: req.workspaceId,
+    });
 
     if (!task) {
       return res
@@ -150,13 +180,119 @@ export const updateTask = async (req, res, next) => {
         .json({ success: false, message: "Task not found." });
     }
 
-    return res.status(200).json({ success: true, data: task });
+    const previousStatus = task.status;
+    const previousPriority = task.priority;
+    const previousAssigneeId = task.assigneeId
+      ? task.assigneeId.toString()
+      : null;
+    const previousDueDate = task.dueDate
+      ? new Date(task.dueDate).getTime()
+      : null;
+
+    const allowedFields = [
+      "title",
+      "description",
+      "status",
+      "priority",
+      "assigneeId",
+      "dueDate",
+      "tags",
+    ];
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        task[field] = req.body[field];
+      }
+    });
+
+    await task.save();
+
+    if (req.body.status && req.body.status !== previousStatus) {
+      logActivity({
+        workspaceId: req.workspaceId,
+        userId: req.user._id,
+        projectId: task.projectId,
+        taskId: task._id,
+        action: "TASK_STATUS_UPDATED",
+        metadata: {
+          taskKey: task.taskKey,
+          taskTitle: task.title,
+          fromStatus: previousStatus,
+          toStatus: task.status,
+        },
+      });
+    }
+
+    if (req.body.priority && req.body.priority !== previousPriority) {
+      logActivity({
+        workspaceId: req.workspaceId,
+        userId: req.user._id,
+        projectId: task.projectId,
+        taskId: task._id,
+        action: "TASK_PRIORITY_UPDATED",
+        metadata: {
+          taskKey: task.taskKey,
+          taskTitle: task.title,
+          fromPriority: previousPriority,
+          toPriority: task.priority,
+        },
+      });
+    }
+
+    const newAssigneeId = task.assigneeId ? task.assigneeId.toString() : null;
+    if (
+      req.body.assigneeId !== undefined &&
+      newAssigneeId !== previousAssigneeId
+    ) {
+      let assigneeName = "Unassigned";
+      if (task.assigneeId) {
+        const assignedUser = await User.findById(task.assigneeId).select(
+          "name",
+        );
+        if (assignedUser) assigneeName = assignedUser.name;
+      }
+
+      logActivity({
+        workspaceId: req.workspaceId,
+        userId: req.user._id,
+        projectId: task.projectId,
+        taskId: task._id,
+        action: "TASK_ASSIGNEE_UPDATED",
+        metadata: {
+          taskKey: task.taskKey,
+          taskTitle: task.title,
+          assigneeName,
+        },
+      });
+    }
+
+    const newDueDate = task.dueDate ? new Date(task.dueDate).getTime() : null;
+    if (req.body.dueDate !== undefined && newDueDate !== previousDueDate) {
+      logActivity({
+        workspaceId: req.workspaceId,
+        userId: req.user._id,
+        projectId: task.projectId,
+        taskId: task._id,
+        action: "TASK_DUE_DATE_UPDATED",
+        metadata: {
+          taskKey: task.taskKey,
+          taskTitle: task.title,
+          dueDate: task.dueDate,
+        },
+      });
+    }
+
+    const populated = await task.populate([
+      { path: "assigneeId", select: "name email avatarUrl" },
+      { path: "reporterId", select: "name email avatarUrl" },
+      { path: "projectId", select: "name key" },
+    ]);
+
+    return res.status(200).json({ success: true, data: populated });
   } catch (error) {
     next(error);
   }
 };
 
-// Delete task
 export const deleteTask = async (req, res, next) => {
   try {
     const { taskId } = req.params;
@@ -171,6 +307,18 @@ export const deleteTask = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Task not found." });
     }
+
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      projectId: task.projectId,
+      taskId: task._id,
+      action: "TASK_DELETED",
+      metadata: {
+        taskKey: task.taskKey,
+        taskTitle: task.title,
+      },
+    });
 
     return res
       .status(200)

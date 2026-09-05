@@ -40,6 +40,10 @@ export const API_ENDPOINTS = {
     BY_ID: (documentId) => `/documents/${documentId}`,
     UPLOAD: "/documents/upload",
   },
+  ACTIVITIES: {
+    WORKSPACE: "/activities",
+    PROJECT: (projectId) => `/activities/projects/${projectId}`,
+  },
 };
 
 // Create Axios Instance

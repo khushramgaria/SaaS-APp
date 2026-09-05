@@ -4,6 +4,7 @@ import memberRouter from "./member.routes.js";
 import projectRouter from "./project.routes.js";
 import taskRouter from "./task.routes.js";
 import documentRouter from "./document.routes.js";
+import activityRouter from "./activity.routes.js";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use("/workspaces", memberRouter);
 router.use("/projects", projectRouter);
 router.use("/tasks", taskRouter);
 router.use("/documents", documentRouter);
+router.use("/activities", activityRouter);
 
 export default router;

@@ -1,4 +1,5 @@
 import { Document } from "../models/document.model.js";
+import { logActivity } from "../services/activity.service.js";
 
 // 1. List Documents with Permission Filtering
 export const getDocuments = async (req, res, next) => {
@@ -17,9 +18,6 @@ export const getDocuments = async (req, res, next) => {
       filter.$text = { $search: search };
     }
 
-    // Permission Guard:
-    // OWNER and ADMIN view everything.
-    // MEMBER/VIEWER view only if allowedMembers is empty, or includes them, or they are the author.
     if (!["OWNER", "ADMIN"].includes(req.userRole)) {
       filter.$or = [
         { allowedMembers: { $size: 0 } },
@@ -29,7 +27,7 @@ export const getDocuments = async (req, res, next) => {
     }
 
     const documents = await Document.find(filter)
-      .select("-content") // Exclude heavy HTML body in list view
+      .select("-content")
       .populate("authorId", "name email avatarUrl")
       .populate("projectId", "name key")
       .populate("allowedMembers", "name email avatarUrl")
@@ -41,7 +39,7 @@ export const getDocuments = async (req, res, next) => {
   }
 };
 
-// 2. Create Document with Content & Permissions
+// 2. Create Document 
 export const createDocument = async (req, res, next) => {
   try {
     const { title, content, projectId, allowedMembers, tags } = req.body;
@@ -61,6 +59,17 @@ export const createDocument = async (req, res, next) => {
       { path: "projectId", select: "name key" },
       { path: "allowedMembers", select: "name email avatarUrl" },
     ]);
+
+    // Log Activity: Document Created
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      projectId: document.projectId?._id || document.projectId || null,
+      action: "DOCUMENT_CREATED",
+      metadata: {
+        docTitle: document.title,
+      },
+    });
 
     return res.status(201).json({ success: true, data: populated });
   } catch (error) {
@@ -88,7 +97,6 @@ export const getDocumentById = async (req, res, next) => {
         .json({ success: false, message: "Document not found" });
     }
 
-    // Individual read authorization
     const isOwnerOrAdmin = ["OWNER", "ADMIN"].includes(req.userRole);
     const isAuthor = document.authorId._id.equals(req.user._id);
     const isExplicitlyAllowed =
@@ -108,7 +116,7 @@ export const getDocumentById = async (req, res, next) => {
   }
 };
 
-// 4. Update Document Content & Permissions
+// 4. Update Document
 export const updateDocument = async (req, res, next) => {
   try {
     const { documentId } = req.params;
@@ -124,7 +132,6 @@ export const updateDocument = async (req, res, next) => {
         .json({ success: false, message: "Document not found" });
     }
 
-    // Only Author, Owner, or Admin can edit
     const canEdit =
       ["OWNER", "ADMIN"].includes(req.userRole) ||
       document.authorId.equals(req.user._id);
@@ -157,6 +164,17 @@ export const updateDocument = async (req, res, next) => {
       { path: "projectId", select: "name key" },
       { path: "allowedMembers", select: "name email avatarUrl" },
     ]);
+
+    // Log Activity: Document Updated
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      projectId: document.projectId?._id || document.projectId || null,
+      action: "DOCUMENT_UPDATED",
+      metadata: {
+        docTitle: document.title,
+      },
+    });
 
     return res.status(200).json({ success: true, data: populated });
   } catch (error) {
@@ -192,6 +210,17 @@ export const deleteDocument = async (req, res, next) => {
     }
 
     await Document.findByIdAndDelete(documentId);
+
+    // Log Activity: Document Deleted
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      projectId: document.projectId || null,
+      action: "DOCUMENT_DELETED",
+      metadata: {
+        docTitle: document.title,
+      },
+    });
 
     return res.status(200).json({
       success: true,

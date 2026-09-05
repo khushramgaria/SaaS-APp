@@ -4,6 +4,7 @@ import memberReducer from "./slices/memberSlice";
 import projectReducer from "./slices/projectSlice";
 import taskReducer from "./slices/taskSlice";
 import documentReducer from "./slices/documentSlice";
+import activityReducer from "./slices/activitySlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     projects: projectReducer,
     tasks: taskReducer,
     documents: documentReducer,
+    activity: activityReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

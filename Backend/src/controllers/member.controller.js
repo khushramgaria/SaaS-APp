@@ -3,9 +3,9 @@ import { User } from "../models/user.model.js";
 import { WorkspaceMember } from "../models/workspaceMember.model.js";
 import { WorkspaceInvite } from "../models/workspaceInvite.model.js";
 import { sendInviteEmail } from "../services/email.service.js";
+import { logActivity } from "../services/activity.service.js";
 import { generateInviteToken } from "../utils/helper.js";
 
-// 1. Get all members of the active workspace
 export const getMembers = async (req, res, next) => {
   try {
     const members = await WorkspaceMember.find({ workspaceId: req.workspaceId })
@@ -28,7 +28,6 @@ export const getMembers = async (req, res, next) => {
   }
 };
 
-// 2. Change member role (OWNER or ADMIN only)
 export const updateMemberRole = async (req, res, next) => {
   try {
     const { memberId } = req.params;
@@ -43,7 +42,7 @@ export const updateMemberRole = async (req, res, next) => {
     const targetMembership = await WorkspaceMember.findOne({
       _id: memberId,
       workspaceId: req.workspaceId,
-    });
+    }).populate("userId", "name email");
 
     if (!targetMembership) {
       return res
@@ -66,8 +65,25 @@ export const updateMemberRole = async (req, res, next) => {
       });
     }
 
-    targetMembership.role = role;
-    await targetMembership.save();
+    const previousRole = targetMembership.role;
+
+    if (previousRole !== role) {
+      targetMembership.role = role;
+      await targetMembership.save();
+
+      // Log Activity: Member Role Updated
+      logActivity({
+        workspaceId: req.workspaceId,
+        userId: req.user._id,
+        action: "MEMBER_ROLE_UPDATED",
+        metadata: {
+          targetUserName: targetMembership.userId.name,
+          targetUserEmail: targetMembership.userId.email,
+          fromRole: previousRole,
+          toRole: role,
+        },
+      });
+    }
 
     return res.status(200).json({
       success: true,
@@ -79,7 +95,6 @@ export const updateMemberRole = async (req, res, next) => {
   }
 };
 
-// 3. Remove a member (Unassigns their tasks cleanly)
 export const removeMember = async (req, res, next) => {
   try {
     const { memberId } = req.params;
@@ -87,7 +102,7 @@ export const removeMember = async (req, res, next) => {
     const targetMembership = await WorkspaceMember.findOne({
       _id: memberId,
       workspaceId: req.workspaceId,
-    });
+    }).populate("userId", "name email");
 
     if (!targetMembership) {
       return res
@@ -109,16 +124,28 @@ export const removeMember = async (req, res, next) => {
       });
     }
 
-    // Unassign all tasks assigned to this user inside this workspace
-    // Uses direct db collection call to avoid crash if Task model is not registered yet
     await mongoose.connection
       .collection("tasks")
       .updateMany(
-        { workspaceId: req.workspaceId, assigneeId: targetMembership.userId },
+        {
+          workspaceId: req.workspaceId,
+          assigneeId: targetMembership.userId._id,
+        },
         { $set: { assigneeId: null } },
       );
 
     await WorkspaceMember.findByIdAndDelete(memberId);
+
+    // Log Activity: Member Removed
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      action: "MEMBER_REMOVED",
+      metadata: {
+        targetUserName: targetMembership.userId.name,
+        targetUserEmail: targetMembership.userId.email,
+      },
+    });
 
     return res.status(200).json({
       success: true,
@@ -129,7 +156,6 @@ export const removeMember = async (req, res, next) => {
   }
 };
 
-// 4. Get all pending & expired invites
 export const getInvites = async (req, res, next) => {
   try {
     const invites = await WorkspaceInvite.find({
@@ -151,7 +177,6 @@ export const getInvites = async (req, res, next) => {
   }
 };
 
-// 5. Send Invite
 export const createInvite = async (req, res, next) => {
   try {
     const { email, role } = req.body;
@@ -206,16 +231,21 @@ export const createInvite = async (req, res, next) => {
 
     const inviteUrl = `${process.env.CLIENT_URL}/accept-invite?token=${token}`;
 
-    // Development fallback log
-    console.log(`\n--- INVITATION LINK SENT TO [${normalizedEmail}] ---`);
-    console.log(`URL: ${inviteUrl}`);
-    console.log(`----------------------------------------------------\n`);
-
     await sendInviteEmail({
-      toEmail: normalizedEmail, // or invite.email
+      toEmail: normalizedEmail,
       workspaceName: req.workspace?.name || "the workspace",
       role,
       inviteUrl,
+    });
+
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      action: "MEMBER_INVITED",
+      metadata: {
+        targetUserEmail: normalizedEmail,
+        role,
+      },
     });
 
     return res.status(201).json({
@@ -236,7 +266,6 @@ export const createInvite = async (req, res, next) => {
   }
 };
 
-// 6. Resend Invite (Refreshes token and resets 48hr window)
 export const resendInvite = async (req, res, next) => {
   try {
     const { inviteId } = req.params;
@@ -258,15 +287,23 @@ export const resendInvite = async (req, res, next) => {
     await invite.save();
 
     const inviteUrl = `${process.env.CLIENT_URL}/accept-invite?token=${token}`;
-    console.log(`\n--- RESENT INVITATION LINK TO [${invite.email}] ---`);
-    console.log(`URL: ${inviteUrl}`);
-    console.log(`--------------------------------------------------\n`);
 
     await sendInviteEmail({
       toEmail: invite.email,
       workspaceName: req.workspace?.name || "the workspace",
       role: invite.role,
       inviteUrl,
+    });
+
+    // Log Activity: Invite Resent
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      action: "MEMBER_INVITE_RESENT",
+      metadata: {
+        targetUserEmail: invite.email,
+        role: invite.role,
+      },
     });
 
     return res.status(200).json({
@@ -279,7 +316,6 @@ export const resendInvite = async (req, res, next) => {
   }
 };
 
-// 7. Revoke Invite
 export const revokeInvite = async (req, res, next) => {
   try {
     const { inviteId } = req.params;
@@ -294,6 +330,17 @@ export const revokeInvite = async (req, res, next) => {
         .status(404)
         .json({ success: false, message: "Invite not found." });
     }
+
+    // Log Activity: Invite Revoked
+    logActivity({
+      workspaceId: req.workspaceId,
+      userId: req.user._id,
+      action: "MEMBER_INVITE_REVOKED",
+      metadata: {
+        targetUserEmail: invite.email,
+        role: invite.role,
+      },
+    });
 
     return res
       .status(200)
