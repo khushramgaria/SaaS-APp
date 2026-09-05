@@ -98,21 +98,21 @@ const Documents = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 lg:p-10">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-6 lg:p-10 transition-colors duration-200">
       {/* Page Top Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex items-center space-x-3">
-          <div className="p-2.5 rounded-xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-400">
+          <div className="p-2.5 rounded-xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400">
             <FileText className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h1 className="text-2xl font-bold tracking-tight text-white">Documents</h1>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Documents</h1>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
                 {documents.length}
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
               Knowledge base, technical specifications, and team documentation.
             </p>
           </div>
@@ -128,7 +128,7 @@ const Documents = () => {
       </div>
 
       {/* Filter Strip */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 mb-8 backdrop-blur-md flex flex-col md:flex-row items-center gap-4">
+      <div className="bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl p-4 mb-8 shadow-sm flex flex-col md:flex-row items-center gap-4 transition-colors duration-200">
         {/* Search Input */}
         <div className="relative flex-1 w-full">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -137,12 +137,12 @@ const Documents = () => {
             placeholder="Search documents by title or tag..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-slate-950/60 border border-slate-800 text-slate-200 text-sm rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-indigo-500/60 transition-colors placeholder:text-slate-500"
+            className="w-full bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200 text-sm rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-indigo-500 transition-colors placeholder:text-slate-400 dark:placeholder:text-slate-500"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
             >
               <X className="w-4 h-4" />
             </button>
@@ -155,7 +155,7 @@ const Documents = () => {
           <select
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
-            className="bg-slate-950/60 border border-slate-800 text-slate-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-indigo-500/60 w-full md:w-48 cursor-pointer"
+            className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-indigo-500 w-full md:w-48 cursor-pointer"
           >
             <option value="ALL">All Projects</option>
             <option value="NONE">General (No Project)</option>
@@ -174,7 +174,7 @@ const Documents = () => {
             <select
               value={selectedTag}
               onChange={(e) => setSelectedTag(e.target.value)}
-              className="bg-slate-950/60 border border-slate-800 text-slate-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-indigo-500/60 w-full md:w-40 cursor-pointer"
+              className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-300 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-indigo-500 w-full md:w-40 cursor-pointer"
             >
               <option value="ALL">All Tags</option>
               {allTags.map((t) => (
@@ -193,29 +193,29 @@ const Documents = () => {
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
               key={i}
-              className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4 animate-pulse"
+              className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-4 animate-pulse"
             >
-              <div className="h-5 bg-slate-800/80 rounded w-3/4" />
-              <div className="h-4 bg-slate-800/40 rounded w-full" />
-              <div className="h-4 bg-slate-800/40 rounded w-2/3" />
-              <div className="flex items-center justify-between pt-4 border-t border-slate-800/60">
-                <div className="w-6 h-6 rounded-full bg-slate-800" />
-                <div className="w-16 h-4 bg-slate-800 rounded" />
+              <div className="h-5 bg-slate-200 dark:bg-slate-800/80 rounded w-3/4" />
+              <div className="h-4 bg-slate-200 dark:bg-slate-800/40 rounded w-full" />
+              <div className="h-4 bg-slate-200 dark:bg-slate-800/40 rounded w-2/3" />
+              <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800/60">
+                <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800" />
+                <div className="w-16 h-4 bg-slate-200 dark:bg-slate-800 rounded" />
               </div>
             </div>
           ))}
         </div>
       ) : filteredDocs.length === 0 ? (
-        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-12 text-center max-w-xl mx-auto my-12">
-          <div className="w-16 h-16 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-4">
+        <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-12 text-center max-w-xl mx-auto my-12 shadow-sm transition-colors duration-200">
+          <div className="w-16 h-16 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-4">
             <FileText className="w-8 h-8" />
           </div>
-          <h3 className="text-xl font-bold text-slate-100 mb-2">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
             {searchTerm || selectedProjectId !== "ALL" || selectedTag !== "ALL"
               ? "No matching documents"
               : "No documents created yet"}
           </h3>
-          <p className="text-sm text-slate-400 mb-6">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
             {searchTerm || selectedProjectId !== "ALL" || selectedTag !== "ALL"
               ? "Try adjusting your search query or reset filters."
               : "Create technical documentation, architecture specs, or team notes."}
@@ -241,13 +241,13 @@ const Documents = () => {
               <div
                 key={doc._id}
                 onClick={() => navigate(`/documents/${doc._id}`)}
-                className="group bg-slate-900/70 hover:bg-slate-900 border border-slate-800/90 hover:border-indigo-500/40 rounded-xl p-5 shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between"
+                className="group bg-white dark:bg-slate-900/70 hover:bg-slate-50 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800/90 hover:border-indigo-500/40 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   {/* Card Top Strip: Project badge & Lock/Public Pill */}
                   <div className="flex items-center justify-between gap-2">
                     {project ? (
-                      <span className="inline-flex items-center space-x-1 text-[11px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-medium truncate max-w-[140px]">
+                      <span className="inline-flex items-center space-x-1 text-[11px] px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 font-medium truncate max-w-[140px]">
                         <Folder className="w-3 h-3 shrink-0" />
                         <span className="truncate">{project.name}</span>
                       </span>
@@ -257,7 +257,7 @@ const Documents = () => {
 
                     {isRestricted ? (
                       <div
-                        className="flex items-center space-x-1 text-[11px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 shrink-0"
+                        className="flex items-center space-x-1 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 shrink-0"
                         title="Restricted Access"
                       >
                         <Lock className="w-3 h-3" />
@@ -265,7 +265,7 @@ const Documents = () => {
                       </div>
                     ) : (
                       <div
-                        className="flex items-center space-x-1 text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 shrink-0"
+                        className="flex items-center space-x-1 text-[11px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 shrink-0"
                         title="Workspace Public"
                       >
                         <Globe className="w-3 h-3" />
@@ -275,13 +275,13 @@ const Documents = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-semibold text-base text-slate-100 group-hover:text-indigo-300 transition-colors line-clamp-1">
+                  <h3 className="font-semibold text-base text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors line-clamp-1">
                     {doc.title || "Untitled Document"}
                   </h3>
 
                   {/* Content Summary */}
                   {Boolean(getPlainTextSummary(doc.content)) && (
-                    <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
                       {getPlainTextSummary(doc.content)}
                     </p>
                   )}
@@ -292,7 +292,7 @@ const Documents = () => {
                       {doc.tags.slice(0, 3).map((tag, idx) => (
                         <span
                           key={idx}
-                          className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/50"
+                          className="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50"
                         >
                           #{tag}
                         </span>
@@ -307,9 +307,9 @@ const Documents = () => {
                 </div>
 
                 {/* Footer Metadata */}
-                <div className="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between">
+                <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-indigo-600/30 border border-indigo-500/30 flex items-center justify-center text-[10px] font-semibold text-indigo-300">
+                    <div className="w-6 h-6 rounded-full bg-indigo-600/20 dark:bg-indigo-600/30 border border-indigo-500/30 flex items-center justify-center text-[10px] font-semibold text-indigo-600 dark:text-indigo-300">
                       {author.avatar ? (
                         <img
                           src={author.avatar}
@@ -320,7 +320,7 @@ const Documents = () => {
                         author.name?.charAt(0).toUpperCase() || "U"
                       )}
                     </div>
-                    <span className="text-xs text-slate-400 font-medium truncate max-w-[100px]">
+                    <span className="text-xs text-slate-600 dark:text-slate-400 font-medium truncate max-w-[100px]">
                       {author.name || "Unknown"}
                     </span>
                   </div>
@@ -335,7 +335,7 @@ const Documents = () => {
 
                     <button
                       onClick={() => setDeleteTarget(doc)}
-                      className="p-1.5 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800/80 transition-colors"
+                      className="p-1.5 text-slate-400 hover:text-red-500 dark:hover:text-red-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
                       title="Delete document"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

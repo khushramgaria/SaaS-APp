@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { Mail, Lock, Users, ArrowRight } from "lucide-react";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
+import ThemeToggle from "../../components/common/ThemeToggle";
 import { loginUser } from "../../redux/slices/authSlice";
 
 const Login = () => {
@@ -35,21 +36,26 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center bg-slate-950 text-slate-100 p-4 relative overflow-hidden">
-      {/* Dynamic Background Glow Elements */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen w-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 relative overflow-hidden transition-colors">
+      {/* Top Right Theme Toggle */}
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeToggle />
+      </div>
 
-      <div className="w-full max-w-md bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-2xl p-8 shadow-2xl relative z-10">
+      {/* Dynamic Background Glow Elements */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/10 dark:bg-violet-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 backdrop-blur-xl rounded-2xl p-8 shadow-xl dark:shadow-2xl relative z-10">
         {/* Header Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-violet-600/30 mb-3">
             <Users className="w-6 h-6 fill-current" />
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
             Welcome back to TeamSpace
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
             Enter your credentials to access your workspace
           </p>
         </div>
@@ -100,11 +106,11 @@ const Login = () => {
         </form>
 
         {/* Footer Link to Register */}
-        <div className="mt-8 pt-6 border-t border-slate-800 text-center text-sm text-slate-400">
+        <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400">
           Don&apos;t have an account?{" "}
           <Link
             to="/register"
-            className="font-semibold text-violet-400 hover:text-violet-300 transition-colors underline underline-offset-4"
+            className="font-semibold text-violet-600 dark:text-violet-400 hover:text-violet-500 dark:hover:text-violet-300 transition-colors underline underline-offset-4"
           >
             Create Workspace
           </Link>

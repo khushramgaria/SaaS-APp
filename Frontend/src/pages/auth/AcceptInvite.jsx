@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
+import ThemeToggle from "../../components/common/ThemeToggle";
 import apiClient, { API_ENDPOINTS } from "../../utils/api";
 
 const AcceptInvite = () => {
@@ -111,17 +112,22 @@ const AcceptInvite = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center bg-slate-950 text-slate-100 p-4 relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-violet-600/20 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen w-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 p-4 relative overflow-hidden transition-colors">
+      {/* Top Right Theme Toggle */}
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeToggle />
+      </div>
 
-      <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 backdrop-blur-xl rounded-2xl p-8 shadow-2xl relative z-10 my-8">
+      {/* Background Glow */}
+      <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-violet-600/10 dark:bg-violet-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div className="w-full max-w-md bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 backdrop-blur-xl rounded-2xl p-8 shadow-xl dark:shadow-2xl relative z-10 my-8">
         {/* Loading State */}
         {isLoadingDetails && (
           <div className="flex flex-col items-center justify-center py-12 space-y-4">
             <Loader2 className="w-10 h-10 text-violet-500 animate-spin" />
-            <p className="text-sm text-slate-400 font-medium">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               Verifying invitation link...
             </p>
           </div>
@@ -130,13 +136,13 @@ const AcceptInvite = () => {
         {/* Error / Expired State */}
         {!isLoadingDetails && inviteError && (
           <div className="flex flex-col items-center text-center py-6">
-            <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-4">
+            <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 dark:text-red-400 mb-4">
               <AlertCircle className="w-8 h-8" />
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
               Invitation Link Invalid
             </h2>
-            <p className="text-sm text-slate-400 leading-relaxed mb-6">
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
               {inviteError}
             </p>
             <Button onClick={() => navigate("/login")} variant="secondary" fullWidth>
@@ -152,15 +158,15 @@ const AcceptInvite = () => {
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-violet-600/30 mb-3">
                 <Building2 className="w-6 h-6" />
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-violet-500/10 border border-violet-500/20 text-violet-400 mb-2">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-violet-500/10 border border-violet-500/20 text-violet-600 dark:text-violet-400 mb-2">
                 Workspace Invitation
               </span>
-              <h1 className="text-2xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                 Join {inviteDetails.workspaceName}
               </h1>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                 You have been invited to collaborate as a{" "}
-                <span className="font-semibold text-violet-300">
+                <span className="font-semibold text-violet-600 dark:text-violet-300">
                   {inviteDetails.role}
                 </span>
               </p>
@@ -219,11 +225,11 @@ const AcceptInvite = () => {
               </Button>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-slate-800 text-center text-xs text-slate-400">
+            <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-400">
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="text-violet-400 hover:text-violet-300 font-medium underline"
+                className="text-violet-600 dark:text-violet-400 hover:text-violet-500 dark:hover:text-violet-300 font-medium underline"
               >
                 Sign In
               </Link>

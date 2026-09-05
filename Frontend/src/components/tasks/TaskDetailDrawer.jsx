@@ -89,18 +89,18 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-slate-900/40 dark:bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="absolute inset-0" onClick={onClose} />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-lg bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col justify-between z-10 animate-in slide-in-from-right duration-300">
+        <div className="w-screen max-w-lg bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col justify-between z-10 animate-in slide-in-from-right duration-300">
           {/* Header */}
-          <div className="p-6 border-b border-slate-800/80 flex items-center justify-between gap-4">
+          <div className="p-6 border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs font-bold text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded">
+              <span className="font-mono text-xs font-bold text-violet-600 dark:text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded">
                 {task.taskKey || "TASK"}
               </span>
-              <span className="text-xs text-slate-400 truncate max-w-[200px]">
+              <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[200px]">
                 {task.projectId?.name || "Project Task"}
               </span>
             </div>
@@ -110,7 +110,7 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
                 <button
                   type="button"
                   onClick={() => setIsDeleteModalOpen(true)}
-                  className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                  className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
                   title="Delete Task"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -119,7 +119,7 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                className="p-2 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -130,7 +130,7 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
           <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-6 space-y-6">
             {/* Title Input */}
             <div>
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
+              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-1.5">
                 Task Title
               </label>
               <input
@@ -139,21 +139,21 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
                 disabled={isViewer}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full bg-slate-950 text-white font-semibold text-lg border border-slate-800 focus:border-violet-500 rounded-xl p-3 outline-none transition-all disabled:opacity-70"
+                className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-semibold text-lg border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-3 outline-none transition-all disabled:opacity-70"
               />
             </div>
 
             {/* Grid for Status & Priority */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-1.5">
                   Status
                 </label>
                 <select
                   value={status}
                   disabled={isViewer}
                   onChange={(e) => setStatus(e.target.value)}
-                  className="w-full bg-slate-950 text-white border border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer disabled:opacity-70"
+                  className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer disabled:opacity-70"
                 >
                   <option value="BACKLOG">BACKLOG</option>
                   <option value="TODO">TO DO</option>
@@ -164,14 +164,14 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-1.5">
                   Priority
                 </label>
                 <select
                   value={priority}
                   disabled={isViewer}
                   onChange={(e) => setPriority(e.target.value)}
-                  className="w-full bg-slate-950 text-white border border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer disabled:opacity-70"
+                  className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-semibold outline-none cursor-pointer disabled:opacity-70"
                 >
                   <option value="LOW">LOW</option>
                   <option value="MEDIUM">MEDIUM</option>
@@ -184,15 +184,15 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
             {/* Assignee & Due Date */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1">
-                  <User className="w-3 h-3 text-violet-400" />
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1">
+                  <User className="w-3 h-3 text-violet-500" />
                   <span>Assignee</span>
                 </label>
                 <select
                   value={assigneeId}
                   disabled={isViewer}
                   onChange={(e) => setAssigneeId(e.target.value)}
-                  className="w-full bg-slate-950 text-white border border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs outline-none cursor-pointer disabled:opacity-70"
+                  className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs outline-none cursor-pointer disabled:opacity-70"
                 >
                   <option value="">Unassigned</option>
                   {members.map((m) => {
@@ -208,8 +208,8 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-violet-400" />
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1">
+                  <Calendar className="w-3 h-3 text-violet-500" />
                   <span>Due Date</span>
                 </label>
                 <input
@@ -217,15 +217,15 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
                   value={dueDate}
                   disabled={isViewer}
                   onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full bg-slate-950 text-white border border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs outline-none cursor-pointer disabled:opacity-70"
+                  className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs outline-none cursor-pointer disabled:opacity-70"
                 />
               </div>
             </div>
 
             {/* Description Textarea */}
             <div>
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1">
-                <AlignLeft className="w-3 h-3 text-violet-400" />
+              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-1.5 flex items-center gap-1">
+                <AlignLeft className="w-3 h-3 text-violet-500" />
                 <span>Description</span>
               </label>
               <textarea
@@ -234,14 +234,14 @@ const TaskDetailDrawer = ({ task, isOpen, onClose, members = [] }) => {
                 disabled={isViewer}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Add task description, context, or acceptance criteria..."
-                className="w-full bg-slate-950 text-slate-200 border border-slate-800 focus:border-violet-500 rounded-xl p-3 text-sm outline-none transition-all resize-none leading-relaxed disabled:opacity-70"
+                className="w-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-3 text-sm outline-none transition-all resize-none leading-relaxed disabled:opacity-70"
               />
             </div>
           </form>
 
           {/* Drawer Footer Actions */}
           {!isViewer && (
-            <div className="p-6 border-t border-slate-800/80 flex items-center justify-end gap-3 bg-slate-900/90">
+            <div className="p-6 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-end gap-3 bg-slate-50/90 dark:bg-slate-900/90">
               <Button type="button" variant="ghost" onClick={onClose}>
                 Cancel
               </Button>

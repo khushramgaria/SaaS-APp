@@ -9,10 +9,7 @@ import {
   Trash2,
   RefreshCw,
   XCircle,
-  Shield,
-  CheckCircle2,
   AlertCircle,
-  Calendar,
 } from "lucide-react";
 import DataTable from "../components/common/DataTable";
 import Button from "../components/ui/Button";
@@ -52,10 +49,10 @@ const getInitials = (name) => {
 // Role badge component
 const RoleBadge = ({ role }) => {
   const roleStyles = {
-    OWNER: "bg-violet-500/10 text-violet-400 border-violet-500/20",
-    ADMIN: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
-    MEMBER: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-    VIEWER: "bg-slate-500/10 text-slate-400 border-slate-500/20",
+    OWNER: "bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20",
+    ADMIN: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20",
+    MEMBER: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    VIEWER: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20",
   };
 
   return (
@@ -177,19 +174,23 @@ const Members = () => {
       header: "Member",
       cell: (row) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-300 font-semibold text-sm shrink-0">
-            {getInitials(row.name)}
+          <div className="w-10 h-10 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-600 dark:text-violet-300 font-semibold text-sm shrink-0 overflow-hidden">
+            {row.avatarUrl ? (
+              <img src={row.avatarUrl} alt={row.name} className="w-full h-full object-cover" />
+            ) : (
+              getInitials(row.name)
+            )}
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-white flex items-center gap-1.5">
+            <span className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
               {row.name}
               {row.userId === user?._id && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-300 border border-violet-500/30 font-semibold">
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-violet-500/20 text-violet-600 dark:text-violet-300 border border-violet-500/30 font-semibold">
                   You
                 </span>
               )}
             </span>
-            <span className="text-xs text-slate-400">{row.email}</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">{row.email}</span>
           </div>
         </div>
       ),
@@ -202,7 +203,6 @@ const Members = () => {
         const isTargetAdmin = row.role === "ADMIN";
         const isCurrentAdmin = currentUserRole === "ADMIN";
 
-        // Disable role edit if target is owner, or target is self, or current user is admin modifying an admin
         const cannotEdit =
           !canManage || isSelf || isTargetOwner || (isCurrentAdmin && isTargetAdmin);
 
@@ -216,7 +216,7 @@ const Members = () => {
             onChange={(e) =>
               handleRoleChange(row.membershipId, e.target.value, row.role)
             }
-            className="bg-slate-950 text-slate-200 border border-slate-800 focus:border-violet-500 rounded-lg py-1 px-2.5 text-xs font-medium cursor-pointer outline-none"
+            className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-200 border border-slate-300 dark:border-slate-800 focus:border-violet-500 rounded-lg py-1 px-2.5 text-xs font-medium cursor-pointer outline-none shadow-sm"
           >
             <option value="ADMIN">ADMIN</option>
             <option value="MEMBER">MEMBER</option>
@@ -228,7 +228,7 @@ const Members = () => {
     {
       header: "Joined Date",
       cell: (row) => (
-        <span className="text-xs text-slate-400">{formatDate(row.joinedAt)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatDate(row.joinedAt)}</span>
       ),
     },
     ...(canManage
@@ -253,7 +253,7 @@ const Members = () => {
                     onClick={() =>
                       handleRemoveMemberClick(row.membershipId, row.name)
                     }
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
                     title="Remove member"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -272,10 +272,10 @@ const Members = () => {
       header: "Email",
       cell: (row) => (
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-400">
+          <div className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400">
             <Mail className="w-4 h-4" />
           </div>
-          <span className="font-medium text-white text-sm">{row.email}</span>
+          <span className="font-medium text-slate-900 dark:text-white text-sm">{row.email}</span>
         </div>
       ),
     },
@@ -286,13 +286,13 @@ const Members = () => {
     {
       header: "Sent At",
       cell: (row) => (
-        <span className="text-xs text-slate-400">{formatDate(row.createdAt)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatDate(row.createdAt)}</span>
       ),
     },
     {
       header: "Expires At",
       cell: (row) => (
-        <span className="text-xs text-slate-400">{formatDate(row.expiresAt)}</span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">{formatDate(row.expiresAt)}</span>
       ),
     },
     {
@@ -302,12 +302,12 @@ const Members = () => {
           row.isExpired || (row.expiresAt && new Date() > new Date(row.expiresAt));
 
         return isExpired ? (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
             <AlertCircle className="w-3.5 h-3.5" />
             <span>Expired</span>
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
             <Clock className="w-3.5 h-3.5 animate-pulse" />
             <span>Pending</span>
           </span>
@@ -335,7 +335,7 @@ const Members = () => {
             )}
             <button
               onClick={() => handleRevokeInviteClick(row._id, row.email)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
               title="Revoke invitation"
             >
               <XCircle className="w-4 h-4" />
@@ -347,19 +347,19 @@ const Members = () => {
   ];
 
   return (
-    <div className="flex-1 p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="flex-1 p-6 md:p-8 max-w-7xl mx-auto space-y-6 bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400">
+            <div className="w-10 h-10 rounded-xl bg-violet-600/10 dark:bg-violet-600/20 border border-violet-500/20 dark:border-violet-500/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                 Workspace Members
               </h1>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-600 dark:text-slate-400">
                 Manage active team members, roles, and pending invitations
               </p>
             </div>
@@ -378,18 +378,18 @@ const Members = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800">
         <button
           onClick={() => setActiveTab("members")}
           className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
             activeTab === "members"
-              ? "border-violet-500 text-white"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "border-violet-600 dark:border-violet-500 text-violet-600 dark:text-white"
+              : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
           }`}
         >
           <Users className="w-4 h-4" />
           <span>Active Members</span>
-          <span className="ml-1 px-2 py-0.5 rounded-full text-xs bg-slate-800 text-slate-300">
+          <span className="ml-1 px-2 py-0.5 rounded-full text-xs bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
             {members.length}
           </span>
         </button>
@@ -399,14 +399,14 @@ const Members = () => {
             onClick={() => setActiveTab("invites")}
             className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
               activeTab === "invites"
-                ? "border-violet-500 text-white"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-violet-600 dark:border-violet-500 text-violet-600 dark:text-white"
+                : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
             }`}
           >
             <Mail className="w-4 h-4" />
             <span>Pending Invitations</span>
             {invites.length > 0 && (
-              <span className="ml-1 px-2 py-0.5 rounded-full text-xs bg-violet-600/30 text-violet-300 border border-violet-500/30">
+              <span className="ml-1 px-2 py-0.5 rounded-full text-xs bg-violet-600/20 text-violet-600 dark:text-violet-300 border border-violet-500/30">
                 {invites.length}
               </span>
             )}

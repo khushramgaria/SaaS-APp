@@ -3,7 +3,6 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ChevronLeft,
-  FileText,
   Folder,
   Lock,
   Globe,
@@ -30,7 +29,7 @@ const DocumentEditor = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const { currentDocument, isSaving, isLoading } = useSelector(
+  const { currentDocument, isSaving } = useSelector(
     (state) => state.documents
   );
   const { projects } = useSelector((state) => state.projects);
@@ -139,25 +138,25 @@ const DocumentEditor = () => {
   const linkedProject = projects.find((p) => p._id === projectId);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-200">
       {/* Top Header Bar */}
-      <header className="sticky top-0 z-40 bg-slate-950/90 border-b border-slate-800/80 backdrop-blur-md px-4 lg:px-8 py-3.5 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-950/90 border-b border-slate-200 dark:border-slate-800/80 backdrop-blur-md px-4 lg:px-8 py-3.5 flex items-center justify-between">
         {/* Left: Breadcrumb & Title */}
         <div className="flex items-center space-x-3">
           <button
             onClick={handleCancel}
-            className="flex items-center space-x-1 text-slate-400 hover:text-slate-100 transition-colors text-sm px-2.5 py-1.5 rounded-lg hover:bg-slate-900"
+            className="flex items-center space-x-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors text-sm px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Documents</span>
           </button>
-          <span className="text-slate-600">/</span>
-          <span className="text-sm font-semibold text-slate-200 truncate max-w-[200px] sm:max-w-xs">
+          <span className="text-slate-400 dark:text-slate-600">/</span>
+          <span className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[200px] sm:max-w-xs">
             {isEditMode ? `Edit / ${title}` : "New Document"}
           </span>
 
           {linkedProject && (
-            <span className="hidden sm:inline-flex items-center space-x-1 text-xs px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-medium">
+            <span className="hidden sm:inline-flex items-center space-x-1 text-xs px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 font-medium">
               <Folder className="w-3 h-3" />
               <span>{linkedProject.name}</span>
             </span>
@@ -169,7 +168,7 @@ const DocumentEditor = () => {
           <button
             type="button"
             onClick={handleCancel}
-            className="text-slate-400 hover:text-slate-200 text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-900 transition-colors"
+            className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-sm font-medium px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors cursor-pointer"
           >
             Cancel
           </button>
@@ -189,10 +188,10 @@ const DocumentEditor = () => {
       {/* Main Composition Workspace */}
       <main className="flex-1 w-full max-w-4xl mx-auto px-4 lg:px-8 py-8 space-y-6">
         {/* Document Metadata Strip */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+        <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
           {/* Editable Document Title */}
           <div>
-            <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
               Title
             </label>
             <input
@@ -200,19 +199,19 @@ const DocumentEditor = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Document Title..."
-              className="w-full bg-slate-950/80 border border-slate-800 text-2xl font-bold text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-indigo-500/60"
+              className="w-full bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-2xl font-bold text-slate-900 dark:text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-indigo-500 shadow-sm"
             />
           </div>
 
           {/* Project, Access, and Tags Row */}
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-2 border-t border-slate-800/60">
+          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800/60">
             {/* Linked Project Dropdown */}
             <div className="flex items-center space-x-2">
-              <Folder className="w-4 h-4 text-indigo-400 shrink-0" />
+              <Folder className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
               <select
                 value={projectId}
                 onChange={(e) => setProjectId(e.target.value)}
-                className="bg-slate-950 border border-slate-800 text-slate-200 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500/60 cursor-pointer"
+                className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-indigo-500 cursor-pointer shadow-sm"
               >
                 <option value="">No Project (General)</option>
                 {projects.map((p) => (
@@ -229,18 +228,18 @@ const DocumentEditor = () => {
               onClick={() => setIsAccessModalOpen(true)}
               className={`flex items-center space-x-1.5 text-xs px-3 py-1.5 rounded-lg border font-medium transition-all cursor-pointer ${
                 isRestricted
-                  ? "bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/20"
-                  : "bg-slate-950 border-slate-800 text-slate-300 hover:bg-slate-800"
+                  ? "bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-300 hover:bg-amber-500/20"
+                  : "bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
               }`}
             >
               {isRestricted ? (
                 <>
-                  <Lock className="w-3.5 h-3.5 text-amber-400" />
+                  <Lock className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                   <span>Restricted ({allowedMembers.length})</span>
                 </>
               ) : (
                 <>
-                  <Globe className="w-3.5 h-3.5 text-emerald-400" />
+                  <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                   <span>Workspace Public</span>
                 </>
               )}
@@ -248,17 +247,17 @@ const DocumentEditor = () => {
 
             {/* Tags Strip */}
             <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-              <Tag className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+              <Tag className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center space-x-1 bg-slate-950 border border-slate-800 text-slate-300 px-2.5 py-0.5 rounded-md text-[11px]"
+                  className="inline-flex items-center space-x-1 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-0.5 rounded-md text-[11px]"
                 >
                   <span>#{tag}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="text-slate-500 hover:text-slate-200 ml-1"
+                    className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 ml-1"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -274,13 +273,13 @@ const DocumentEditor = () => {
                   onBlur={handleAddTag}
                   placeholder="tag name..."
                   autoFocus
-                  className="bg-slate-950 border border-indigo-500/60 text-slate-200 text-[11px] rounded px-2 py-0.5 w-24 focus:outline-none"
+                  className="bg-slate-50 dark:bg-slate-950 border border-indigo-500 text-slate-900 dark:text-slate-200 text-[11px] rounded px-2 py-0.5 w-24 focus:outline-none"
                 />
               ) : (
                 <button
                   type="button"
                   onClick={() => setIsAddingTag(true)}
-                  className="inline-flex items-center space-x-1 text-slate-500 hover:text-indigo-400 transition-colors text-[11px] py-0.5 cursor-pointer"
+                  className="inline-flex items-center space-x-1 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-[11px] py-0.5 cursor-pointer"
                 >
                   <Plus className="w-3 h-3" />
                   <span>Add tag</span>

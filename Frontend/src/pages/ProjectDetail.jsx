@@ -152,7 +152,7 @@ const ProjectDetail = () => {
       <div className="space-y-4">
         <button
           onClick={() => navigate("/projects")}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Projects</span>
@@ -160,17 +160,17 @@ const ProjectDetail = () => {
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <span className="font-mono text-sm font-bold text-violet-400 bg-violet-500/10 border border-violet-500/20 px-3 py-1.5 rounded-xl shadow-inner">
+            <span className="font-mono text-sm font-bold text-violet-600 dark:text-violet-400 bg-violet-500/10 border border-violet-500/20 px-3 py-1.5 rounded-xl shadow-inner">
               {currentProject.key}
             </span>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                 {currentProject.name}
               </h1>
-              <div className="flex items-center gap-4 text-xs text-slate-400 mt-1">
+              <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400 mt-1">
                 {currentProject.leadId && (
                   <span className="flex items-center gap-1">
-                    <User className="w-3.5 h-3.5 text-violet-400" />
+                    <User className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
                     <span>Lead: {currentProject.leadId.name}</span>
                   </span>
                 )}
@@ -199,21 +199,21 @@ const ProjectDetail = () => {
         </div>
 
         {/* Completion Progress Bar */}
-        <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 dark:text-emerald-400">
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-slate-300">
+              <span className="text-xs font-semibold text-slate-800 dark:text-slate-300">
                 Project Completion Progress
               </span>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 {completedTasks} of {totalTasks} tasks completed ({completionPercent}%)
               </p>
             </div>
           </div>
-          <div className="w-full md:w-64 h-2.5 bg-slate-800 rounded-full overflow-hidden">
+          <div className="w-full md:w-64 h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700/50">
             <div
               className="h-full bg-gradient-to-r from-violet-600 to-emerald-400 transition-all duration-500"
               style={{ width: `${completionPercent}%` }}
@@ -223,14 +223,14 @@ const ProjectDetail = () => {
       </div>
 
       {/* Tabs Navigation: Overview -> Board -> Tasks -> Documents */}
-      <div className="flex items-center gap-2 border-b border-slate-800 overflow-x-auto custom-scrollbar">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 overflow-x-auto custom-scrollbar">
         {/* Tab 1: Overview */}
         <button
           onClick={() => setActiveTab("overview")}
           className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 whitespace-nowrap ${
             activeTab === "overview"
-              ? "border-violet-500 text-white"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "border-violet-600 text-violet-600 dark:border-violet-500 dark:text-white"
+              : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
           <LayoutDashboard className="w-4 h-4" />
@@ -242,8 +242,8 @@ const ProjectDetail = () => {
           onClick={() => setActiveTab("board")}
           className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 whitespace-nowrap ${
             activeTab === "board"
-              ? "border-violet-500 text-white"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "border-violet-600 text-violet-600 dark:border-violet-500 dark:text-white"
+              : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
           <Kanban className="w-4 h-4" />
@@ -255,13 +255,13 @@ const ProjectDetail = () => {
           onClick={() => setActiveTab("tasks")}
           className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 whitespace-nowrap ${
             activeTab === "tasks"
-              ? "border-violet-500 text-white"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "border-violet-600 text-violet-600 dark:border-violet-500 dark:text-white"
+              : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
           <ListTodo className="w-4 h-4" />
           <span>Task Table</span>
-          <span className="ml-1 px-2 py-0.5 rounded-full text-xs bg-slate-800 text-slate-300">
+          <span className="ml-1 px-2 py-0.5 rounded-full text-xs bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
             {projectTasks.length}
           </span>
         </button>
@@ -271,13 +271,13 @@ const ProjectDetail = () => {
           onClick={() => setActiveTab("documents")}
           className={`pb-3 px-4 font-semibold text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 whitespace-nowrap ${
             activeTab === "documents"
-              ? "border-violet-500 text-white"
-              : "border-transparent text-slate-400 hover:text-slate-200"
+              ? "border-violet-600 text-violet-600 dark:border-violet-500 dark:text-white"
+              : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
           }`}
         >
           <FileText className="w-4 h-4" />
           <span>Documents</span>
-          <span className="ml-1 px-2 py-0.5 rounded-full text-xs bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-semibold">
+          <span className="ml-1 px-2 py-0.5 rounded-full text-xs bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 font-semibold">
             {projectDocuments.length}
           </span>
         </button>
@@ -288,58 +288,58 @@ const ProjectDetail = () => {
         <div className="space-y-6">
           {/* Metrics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
               <div>
-                <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                   Total Tasks
                 </span>
-                <p className="text-2xl font-bold text-white mt-1">
+                <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                   {stats?.TOTAL || 0}
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-violet-600/20 text-violet-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-violet-600/20 text-violet-600 dark:text-violet-400 flex items-center justify-center">
                 <FileText className="w-5 h-5" />
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
               <div>
-                <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                   In Progress
                 </span>
-                <p className="text-2xl font-bold text-amber-400 mt-1">
+                <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
                   {stats?.IN_PROGRESS || 0}
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
                 <Clock className="w-5 h-5" />
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
               <div>
-                <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                   In Review
                 </span>
-                <p className="text-2xl font-bold text-indigo-400 mt-1">
+                <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mt-1">
                   {stats?.IN_REVIEW || 0}
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
                 <AlertCircle className="w-5 h-5" />
               </div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
               <div>
-                <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                   Completed
                 </span>
-                <p className="text-2xl font-bold text-emerald-400 mt-1">
+                <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
                   {stats?.DONE || 0}
                 </p>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
             </div>
@@ -347,19 +347,19 @@ const ProjectDetail = () => {
 
           {/* Description & Team Details Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
-              <h3 className="text-lg font-bold text-white tracking-tight">
+            <div className="lg:col-span-2 p-6 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                 Project Description
               </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
+              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                 {currentProject.description || "No project description specified."}
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                  <Users className="w-5 h-5 text-violet-400" />
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                  <Users className="w-5 h-5 text-violet-600 dark:text-violet-400" />
                   <span>Project Team</span>
                 </h3>
                 {canManage && (
@@ -379,16 +379,16 @@ const ProjectDetail = () => {
                   currentProject.members.map((m) => (
                     <div
                       key={m._id}
-                      className="flex items-center gap-3 p-2 rounded-xl bg-slate-950/60 border border-slate-800/60"
+                      className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/60"
                     >
-                      <div className="w-8 h-8 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-xs font-bold text-violet-300 shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-xs font-bold text-violet-700 dark:text-violet-300 shrink-0">
                         {getInitials(m.name)}
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <span className="text-xs font-semibold text-white truncate">
+                        <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
                           {m.name}
                         </span>
-                        <span className="text-[11px] text-slate-400 truncate">
+                        <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
                           {m.email}
                         </span>
                       </div>
@@ -399,10 +399,10 @@ const ProjectDetail = () => {
           </div>
 
           {/* Recent Project Activity Feed Section */}
-          <div className="bg-[#111827] border border-slate-800 rounded-xl p-6 space-y-4 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
-              <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                <Activity className="w-5 h-5 text-indigo-400" />
+          <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-4 shadow-sm dark:shadow-xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800/80">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <Activity className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 <span>Recent Project Activity</span>
               </h3>
             </div>
@@ -434,7 +434,7 @@ const ProjectDetail = () => {
       {activeTab === "documents" && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-white tracking-tight">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
               Project Documents ({projectDocuments.length})
             </h3>
             <button
@@ -451,26 +451,26 @@ const ProjectDetail = () => {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 space-y-4 animate-pulse"
+                  className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-5 space-y-4 animate-pulse shadow-sm"
                 >
-                  <div className="h-5 bg-slate-800/80 rounded w-3/4" />
-                  <div className="h-4 bg-slate-800/40 rounded w-full" />
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-800/60">
-                    <div className="w-6 h-6 rounded-full bg-slate-800" />
-                    <div className="w-16 h-4 bg-slate-800 rounded" />
+                  <div className="h-5 bg-slate-200 dark:bg-slate-800/80 rounded w-3/4" />
+                  <div className="h-4 bg-slate-200 dark:bg-slate-800/40 rounded w-full" />
+                  <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800/60">
+                    <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800" />
+                    <div className="w-16 h-4 bg-slate-200 dark:bg-slate-800 rounded" />
                   </div>
                 </div>
               ))}
             </div>
           ) : projectDocuments.length === 0 ? (
-            <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-10 text-center max-w-xl mx-auto my-6">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-3">
+            <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-10 text-center max-w-xl mx-auto my-6 shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-3">
                 <FileText className="w-7 h-7" />
               </div>
-              <h4 className="text-lg font-bold text-slate-100 mb-1">
+              <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1">
                 No documents for this project yet
               </h4>
-              <p className="text-xs text-slate-400 mb-5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
                 Create technical specifications, architecture diagrams, or notes linked to {currentProject.name}.
               </p>
               <button
@@ -491,18 +491,18 @@ const ProjectDetail = () => {
                   <div
                     key={doc._id}
                     onClick={() => navigate(`/documents/${doc._id}`)}
-                    className="group bg-slate-900/70 hover:bg-slate-900 border border-slate-800/90 hover:border-indigo-500/40 rounded-xl p-5 shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between"
+                    className="group bg-white dark:bg-slate-900/70 hover:bg-slate-50 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800/90 hover:border-indigo-500/40 rounded-xl p-5 shadow-sm dark:shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between"
                   >
                     <div className="space-y-3">
                       {/* Card Top: Visibility Pill */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
+                        <span className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
                           {currentProject.key}
                         </span>
 
                         {isRestricted ? (
                           <div
-                            className="flex items-center space-x-1 text-[11px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20"
+                            className="flex items-center space-x-1 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20"
                             title="Restricted Access"
                           >
                             <Lock className="w-3 h-3" />
@@ -510,7 +510,7 @@ const ProjectDetail = () => {
                           </div>
                         ) : (
                           <div
-                            className="flex items-center space-x-1 text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20"
+                            className="flex items-center space-x-1 text-[11px] text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20"
                             title="Workspace Public"
                           >
                             <Globe className="w-3 h-3" />
@@ -520,13 +520,13 @@ const ProjectDetail = () => {
                       </div>
 
                       {/* Title */}
-                      <h4 className="font-semibold text-base text-slate-100 group-hover:text-indigo-300 transition-colors line-clamp-1">
+                      <h4 className="font-semibold text-base text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors line-clamp-1">
                         {doc.title || "Untitled Document"}
                       </h4>
 
                       {/* Content Summary (if available) */}
                       {Boolean(getPlainTextSummary(doc.content)) && (
-                        <p className="text-xs text-slate-400 line-clamp-3 leading-relaxed">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">
                           {getPlainTextSummary(doc.content)}
                         </p>
                       )}
@@ -537,13 +537,13 @@ const ProjectDetail = () => {
                           {doc.tags.slice(0, 3).map((tag, idx) => (
                             <span
                               key={idx}
-                              className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/50"
+                              className="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50"
                             >
                               #{tag}
                             </span>
                           ))}
                           {doc.tags.length > 3 && (
-                            <span className="text-[10px] text-slate-500">
+                            <span className="text-[10px] text-slate-400 dark:text-slate-500">
                               +{doc.tags.length - 3}
                             </span>
                           )}
@@ -552,9 +552,9 @@ const ProjectDetail = () => {
                     </div>
 
                     {/* Footer Metadata */}
-                    <div className="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between">
+                    <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <div className="w-6 h-6 rounded-full bg-indigo-600/30 border border-indigo-500/30 flex items-center justify-center text-[10px] font-semibold text-indigo-300">
+                        <div className="w-6 h-6 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-[10px] font-semibold text-indigo-700 dark:text-indigo-300">
                           {author.avatar ? (
                             <img
                               src={author.avatar}
@@ -565,13 +565,13 @@ const ProjectDetail = () => {
                             author.name?.charAt(0).toUpperCase() || "U"
                           )}
                         </div>
-                        <span className="text-xs text-slate-400 font-medium truncate max-w-[100px]">
+                        <span className="text-xs text-slate-600 dark:text-slate-400 font-medium truncate max-w-[100px]">
                           {author.name || "Unknown"}
                         </span>
                       </div>
 
                       <div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
-                        <span className="text-[11px] text-slate-500">
+                        <span className="text-[11px] text-slate-400 dark:text-slate-500">
                           {new Date(doc.updatedAt).toLocaleDateString(undefined, {
                             month: "short",
                             day: "numeric",
@@ -580,7 +580,7 @@ const ProjectDetail = () => {
 
                         <button
                           onClick={() => setDeleteDocTarget(doc)}
-                          className="p-1.5 text-slate-500 hover:text-red-400 rounded-lg hover:bg-slate-800/80 transition-colors"
+                          className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors"
                           title="Delete document"
                         >
                           <Trash2 className="w-3.5 h-3.5" />

@@ -70,14 +70,14 @@ const Tasks = () => {
       {/* Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-400">
+          <div className="w-10 h-10 rounded-xl bg-violet-600/20 border border-violet-500/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
             <ListTodo className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
               Workspace Tasks
             </h1>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Manage and track all tasks across projects in one unified view
             </p>
           </div>
@@ -85,13 +85,13 @@ const Tasks = () => {
 
         <div className="flex items-center gap-3">
           {/* View Switcher Toggle */}
-          <div className="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1">
+          <div className="flex items-center bg-slate-200/80 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-1">
             <button
               onClick={() => setViewMode("board")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 viewMode === "board"
                   ? "bg-violet-600 text-white shadow"
-                  : "text-slate-400 hover:text-slate-200"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
               }`}
             >
               <Kanban className="w-3.5 h-3.5" />
@@ -102,7 +102,7 @@ const Tasks = () => {
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 viewMode === "table"
                   ? "bg-violet-600 text-white shadow"
-                  : "text-slate-400 hover:text-slate-200"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
               }`}
             >
               <TableIcon className="w-3.5 h-3.5" />
@@ -121,7 +121,7 @@ const Tasks = () => {
       </div>
 
       {/* Top Filter Bar */}
-      <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800/80 flex flex-wrap items-center gap-3">
+      <div className="bg-white/80 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-sm flex flex-wrap items-center gap-3">
         {/* Search */}
         <div className="relative flex-1 min-w-[200px]">
           <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400 pointer-events-none" />
@@ -130,7 +130,7 @@ const Tasks = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by title or key..."
-            className="w-full bg-slate-950 text-white text-xs placeholder-slate-500 rounded-xl pl-9 pr-3 py-2.5 border border-slate-800 focus:border-violet-500 outline-none transition-all"
+            className="w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white text-xs placeholder-slate-400 dark:placeholder-slate-500 rounded-xl pl-9 pr-3 py-2.5 border border-slate-200 dark:border-slate-800 focus:border-violet-500 outline-none transition-all"
           />
         </div>
 
@@ -139,7 +139,7 @@ const Tasks = () => {
           <select
             value={selectedProjectId}
             onChange={(e) => setSelectedProjectId(e.target.value)}
-            className="w-full bg-slate-950 text-slate-200 border border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-medium outline-none cursor-pointer"
+            className="w-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-medium outline-none cursor-pointer"
           >
             <option value="">All Projects</option>
             {projects.map((p) => (
@@ -155,7 +155,7 @@ const Tasks = () => {
           <select
             value={selectedPriority}
             onChange={(e) => setSelectedPriority(e.target.value)}
-            className="w-full bg-slate-950 text-slate-200 border border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-medium outline-none cursor-pointer"
+            className="w-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-medium outline-none cursor-pointer"
           >
             <option value="">All Priorities</option>
             <option value="LOW">Low</option>
@@ -171,7 +171,7 @@ const Tasks = () => {
             value={isMyTasksOnly ? "" : selectedAssigneeId}
             disabled={isMyTasksOnly}
             onChange={(e) => setSelectedAssigneeId(e.target.value)}
-            className="w-full bg-slate-950 text-slate-200 border border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-medium outline-none cursor-pointer disabled:opacity-50"
+            className="w-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 focus:border-violet-500 rounded-xl p-2.5 text-xs font-medium outline-none cursor-pointer disabled:opacity-50"
           >
             <option value="">All Assignees</option>
             {members.map((m) => {
@@ -192,8 +192,8 @@ const Tasks = () => {
           onClick={() => setIsMyTasksOnly((prev) => !prev)}
           className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all border cursor-pointer ${
             isMyTasksOnly
-              ? "bg-violet-600/20 text-violet-300 border-violet-500/40"
-              : "bg-slate-950 text-slate-400 border-slate-800 hover:text-white"
+              ? "bg-violet-600/20 text-violet-700 dark:text-violet-300 border-violet-500/40"
+              : "bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-900 dark:hover:text-white"
           }`}
         >
           <User className="w-3.5 h-3.5" />

@@ -64,6 +64,13 @@ html.dark body {
   outline: none !important;
   min-height: 350px;
   font-weight: 400 !important;
+  color: #0f172a;
+}
+
+html.dark .ProseMirror,
+html.dark .prose-editor,
+html.dark .prose-content {
+  color: #e2e8f0;
 }
 
 /* Headings */
@@ -73,10 +80,16 @@ html.dark body {
   font-size: 2rem;
   line-height: 2.25rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #0f172a;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   letter-spacing: -0.025em;
+}
+
+html.dark .ProseMirror h1,
+html.dark .prose-editor h1,
+html.dark .prose-content h1 {
+  color: #ffffff;
 }
 
 .ProseMirror h2,
@@ -85,10 +98,16 @@ html.dark body {
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: #1e293b;
   margin-top: 1.25rem;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
+}
+
+html.dark .ProseMirror h2,
+html.dark .prose-editor h2,
+html.dark .prose-content h2 {
+  color: #f8fafc;
 }
 
 .ProseMirror h3,
@@ -97,9 +116,15 @@ html.dark body {
   font-size: 1.25rem;
   line-height: 1.75rem;
   font-weight: 600;
-  color: #f1f5f9;
+  color: #334155;
   margin-top: 1rem;
   margin-bottom: 0.5rem;
+}
+
+html.dark .ProseMirror h3,
+html.dark .prose-editor h3,
+html.dark .prose-content h3 {
+  color: #f1f5f9;
 }
 
 /* Paragraphs */
@@ -108,8 +133,14 @@ html.dark body {
 .prose-content p {
   margin-bottom: 0.75rem;
   line-height: 1.7;
-  color: #e2e8f0;
+  color: #334155;
   font-weight: 400 !important;
+}
+
+html.dark .ProseMirror p,
+html.dark .prose-editor p,
+html.dark .prose-content p {
+  color: #e2e8f0;
 }
 
 /* Bullet Lists */
@@ -160,7 +191,7 @@ html.dark body {
   margin-top: 1rem;
   margin-bottom: 1rem;
   font-style: italic;
-  color: #cbd5e1;
+  color: #475569;
   background: rgba(99, 102, 241, 0.08);
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -168,18 +199,32 @@ html.dark body {
   font-weight: 400;
 }
 
+html.dark .ProseMirror blockquote,
+html.dark .prose-editor blockquote,
+html.dark .prose-content blockquote {
+  color: #cbd5e1;
+}
+
 /* Inline Code */
 .ProseMirror code,
 .prose-editor code,
 .prose-content code {
-  background-color: #1e293b;
-  color: #a5b4fc;
+  background-color: #f1f5f9;
+  color: #4f46e5;
   padding: 0.15rem 0.4rem;
   border-radius: 0.375rem;
   font-family: monospace;
   font-size: 0.875em;
-  border: 1px solid rgba(51, 65, 85, 0.6);
+  border: 1px solid #e2e8f0;
   font-weight: 400;
+}
+
+html.dark .ProseMirror code,
+html.dark .prose-editor code,
+html.dark .prose-content code {
+  background-color: #1e293b;
+  color: #a5b4fc;
+  border: 1px solid rgba(51, 65, 85, 0.6);
 }
 
 /* Code Blocks */
@@ -213,9 +258,15 @@ html.dark body {
 .prose-editor hr,
 .prose-content hr {
   border: none;
-  border-top: 1px solid #334155;
+  border-top: 1px solid #e2e8f0;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
+}
+
+html.dark .ProseMirror hr,
+html.dark .prose-editor hr,
+html.dark .prose-content hr {
+  border-top: 1px solid #334155;
 }
 
 /* Bold & Italic & Strike */
@@ -223,6 +274,12 @@ html.dark body {
 .prose-editor strong,
 .prose-content strong {
   font-weight: 700 !important;
+  color: #0f172a;
+}
+
+html.dark .ProseMirror strong,
+html.dark .prose-editor strong,
+html.dark .prose-content strong {
   color: #ffffff;
 }
 

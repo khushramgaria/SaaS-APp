@@ -50,16 +50,14 @@ export const getRelativeTime = (createdAt) => {
 const renderStatusBadge = (status) => {
   if (!status) return null;
   const normalized = status.replace("_", " ");
-  let badgeColor = "bg-slate-800 text-slate-300 border-slate-700/60";
+  let badgeColor = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60";
 
   if (status === "DONE") {
-    badgeColor = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+    badgeColor = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20";
   } else if (status === "IN_PROGRESS") {
-    badgeColor = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+    badgeColor = "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20";
   } else if (status === "IN_REVIEW") {
-    badgeColor = "bg-indigo-500/10 text-indigo-400 border-indigo-500/20";
-  } else if (status === "TODO") {
-    badgeColor = "bg-slate-800 text-slate-300 border-slate-700/60";
+    badgeColor = "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20";
   }
 
   return (
@@ -74,7 +72,7 @@ const renderStatusBadge = (status) => {
 const renderRoleBadge = (role) => {
   if (!role) return null;
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
       {role}
     </span>
   );
@@ -82,13 +80,13 @@ const renderRoleBadge = (role) => {
 
 const renderPriorityBadge = (priority) => {
   if (!priority) return null;
-  let color = "bg-slate-800 text-slate-300 border-slate-700/60";
+  let color = "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60";
   if (priority === "HIGH" || priority === "URGENT") {
-    color = "bg-rose-500/10 text-rose-400 border-rose-500/20";
+    color = "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20";
   } else if (priority === "MEDIUM") {
-    color = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+    color = "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20";
   } else if (priority === "LOW") {
-    color = "bg-sky-500/10 text-sky-400 border-sky-500/20";
+    color = "bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20";
   }
 
   return (
@@ -105,7 +103,7 @@ export const formatActivity = (activity) => {
     return {
       titleNode: <span>Unknown activity</span>,
       icon: DefaultActivityIcon,
-      iconColor: "text-slate-400 bg-slate-800/80 border-slate-700/50",
+      iconColor: "text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/50",
       relativeTime: "",
     };
   }
@@ -128,32 +126,32 @@ export const formatActivity = (activity) => {
     case "TASK_CREATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             created task{" "}
             {metadata.taskKey && (
-              <span className="font-mono text-xs font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded mr-1">
+              <span className="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded mr-1">
                 {metadata.taskKey}
               </span>
             )}
-            <span className="text-slate-100 font-medium">
+            <span className="text-slate-900 dark:text-slate-100 font-medium">
               "{metadata.taskTitle || "Untitled Task"}"
             </span>
           </span>
         ),
         icon: CheckSquare,
-        iconColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+        iconColor: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20",
         relativeTime,
       };
 
     case "TASK_STATUS_UPDATED":
       return {
         titleNode: (
-          <span className="inline-flex items-center flex-wrap gap-1 text-slate-300">
+          <span className="inline-flex items-center flex-wrap gap-1 text-slate-600 dark:text-slate-300">
             {renderActor()}
             moved{" "}
             {metadata.taskKey && (
-              <span className="font-mono text-xs font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded">
+              <span className="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded">
                 {metadata.taskKey}
               </span>
             )}
@@ -162,18 +160,18 @@ export const formatActivity = (activity) => {
           </span>
         ),
         icon: ArrowRightLeft,
-        iconColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+        iconColor: "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
         relativeTime,
       };
 
     case "TASK_PRIORITY_UPDATED":
       return {
         titleNode: (
-          <span className="inline-flex items-center flex-wrap gap-1 text-slate-300">
+          <span className="inline-flex items-center flex-wrap gap-1 text-slate-600 dark:text-slate-300">
             {renderActor()}
             changed priority of{" "}
             {metadata.taskKey && (
-              <span className="font-mono text-xs font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded">
+              <span className="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded">
                 {metadata.taskKey}
               </span>
             )}
@@ -181,307 +179,307 @@ export const formatActivity = (activity) => {
           </span>
         ),
         icon: AlertTriangle,
-        iconColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+        iconColor: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20",
         relativeTime,
       };
 
     case "TASK_ASSIGNEE_UPDATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             assigned{" "}
             {metadata.taskKey && (
-              <span className="font-mono text-xs font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded mr-1">
+              <span className="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded mr-1">
                 {metadata.taskKey}
               </span>
             )}
             to{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               {metadata.assigneeName || "a team member"}
             </span>
           </span>
         ),
         icon: UserCheck,
-        iconColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+        iconColor: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20",
         relativeTime,
       };
 
     case "TASK_DUE_DATE_UPDATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             changed due date for{" "}
             {metadata.taskKey && (
-              <span className="font-mono text-xs font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded">
+              <span className="font-mono text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded">
                 {metadata.taskKey}
               </span>
             )}
           </span>
         ),
         icon: Calendar,
-        iconColor: "text-sky-400 bg-sky-500/10 border-sky-500/20",
+        iconColor: "text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/20",
         relativeTime,
       };
 
     case "TASK_DELETED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             deleted task{" "}
             {metadata.taskKey && (
-              <span className="font-mono text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-1.5 py-0.5 rounded">
+              <span className="font-mono text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-500/10 border border-rose-500/20 px-1.5 py-0.5 rounded">
                 {metadata.taskKey}
               </span>
             )}
           </span>
         ),
         icon: Trash2,
-        iconColor: "text-rose-400 bg-rose-500/10 border-rose-500/20",
+        iconColor: "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20",
         relativeTime,
       };
 
     case "PROJECT_CREATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             created project{" "}
             {metadata.projectKey && (
-              <span className="font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded mr-1">
+              <span className="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded mr-1">
                 [{metadata.projectKey}]
               </span>
             )}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               {metadata.projectName || ""}
             </span>
           </span>
         ),
         icon: FolderPlus,
-        iconColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+        iconColor: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
         relativeTime,
       };
 
     case "PROJECT_MEMBERS_UPDATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             updated team assignments for{" "}
             {metadata.projectKey && (
-              <span className="font-mono text-xs font-bold text-purple-400 bg-purple-500/10 border border-purple-500/20 px-1.5 py-0.5 rounded">
+              <span className="font-mono text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-500/10 border border-purple-500/20 px-1.5 py-0.5 rounded">
                 [{metadata.projectKey}]
               </span>
             )}
           </span>
         ),
         icon: Users,
-        iconColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+        iconColor: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20",
         relativeTime,
       };
 
     case "MEMBER_INVITED":
       return {
         titleNode: (
-          <span className="inline-flex items-center flex-wrap gap-1 text-slate-300">
+          <span className="inline-flex items-center flex-wrap gap-1 text-slate-600 dark:text-slate-300">
             {renderActor()}
             invited{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               {metadata.targetUserEmail}
             </span>{" "}
             as {renderRoleBadge(metadata.role)}
           </span>
         ),
         icon: Mail,
-        iconColor: "text-teal-400 bg-teal-500/10 border-teal-500/20",
+        iconColor: "text-teal-600 dark:text-teal-400 bg-teal-500/10 border-teal-500/20",
         relativeTime,
       };
 
     case "MEMBER_INVITE_RESENT":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             resent invitation to{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               {metadata.targetUserEmail}
             </span>
           </span>
         ),
         icon: RefreshCw,
-        iconColor: "text-teal-400 bg-teal-500/10 border-teal-500/20",
+        iconColor: "text-teal-600 dark:text-teal-400 bg-teal-500/10 border-teal-500/20",
         relativeTime,
       };
 
     case "MEMBER_INVITE_REVOKED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             revoked invitation for{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               {metadata.targetUserEmail}
             </span>
           </span>
         ),
         icon: XCircle,
-        iconColor: "text-red-400 bg-red-500/10 border-red-500/20",
+        iconColor: "text-red-600 dark:text-red-400 bg-red-500/10 border-red-500/20",
         relativeTime,
       };
 
     case "MEMBER_ROLE_UPDATED":
       return {
         titleNode: (
-          <span className="inline-flex items-center flex-wrap gap-1 text-slate-300">
+          <span className="inline-flex items-center flex-wrap gap-1 text-slate-600 dark:text-slate-300">
             {renderActor()}
             updated{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               {metadata.targetUserName || "member"}'s
             </span>{" "}
             role to {renderRoleBadge(metadata.toRole || metadata.role)}
           </span>
         ),
         icon: ShieldCheck,
-        iconColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+        iconColor: "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
         relativeTime,
       };
 
     case "MEMBER_REMOVED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             removed{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               {metadata.targetUserName || "a member"}
             </span>{" "}
             from workspace
           </span>
         ),
         icon: UserMinus,
-        iconColor: "text-rose-400 bg-rose-500/10 border-rose-500/20",
+        iconColor: "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20",
         relativeTime,
       };
 
     case "MEMBER_JOINED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             accepted invite and joined workspace
           </span>
         ),
         icon: UserCheck,
-        iconColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+        iconColor: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
         relativeTime,
       };
 
     case "DOCUMENT_CREATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             created document{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               "{metadata.docTitle || "Untitled Document"}"
             </span>
           </span>
         ),
         icon: FilePlus,
-        iconColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+        iconColor: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20",
         relativeTime,
       };
 
     case "DOCUMENT_UPDATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             edited document{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               "{metadata.docTitle || "Untitled Document"}"
             </span>
           </span>
         ),
         icon: FileEdit,
-        iconColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+        iconColor: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20",
         relativeTime,
       };
 
     case "DOCUMENT_DELETED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             deleted document{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               "{metadata.docTitle || "Untitled Document"}"
             </span>
           </span>
         ),
         icon: FileMinus,
-        iconColor: "text-rose-400 bg-rose-500/10 border-rose-500/20",
+        iconColor: "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20",
         relativeTime,
       };
 
     case "USER_PROFILE_UPDATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             changed their display name from{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               "{metadata.previousName || "old name"}"
             </span>{" "}
             to{" "}
-            <span className="font-medium text-white">
+            <span className="font-medium text-slate-900 dark:text-white">
               "{metadata.updatedName || "new name"}"
             </span>
           </span>
         ),
         icon: UserCog,
-        iconColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+        iconColor: "text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
         relativeTime,
       };
 
     case "USER_AVATAR_UPDATED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             updated their profile avatar
           </span>
         ),
         icon: Camera,
-        iconColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+        iconColor: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20",
         relativeTime,
       };
 
     case "USER_PASSWORD_CHANGED":
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             changed their account password
           </span>
         ),
         icon: Key,
-        iconColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+        iconColor: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20",
         relativeTime,
       };
 
     default:
       return {
         titleNode: (
-          <span className="text-slate-300">
+          <span className="text-slate-600 dark:text-slate-300">
             {renderActor()}
             performed action ({action})
           </span>
         ),
         icon: DefaultActivityIcon,
-        iconColor: "text-slate-400 bg-slate-800/80 border-slate-700/50",
+        iconColor: "text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/50",
         relativeTime,
       };
   }
