@@ -22,7 +22,7 @@ const ActivityPage = () => {
 
   useEffect(() => {
     if (isAllowed) {
-      dispatch(fetchWorkspaceActivities({ page, limit: 20 }));
+      dispatch(fetchWorkspaceActivities({ page, limit: 25 }));
     }
   }, [dispatch, page, isAllowed]);
 
@@ -54,6 +54,12 @@ const ActivityPage = () => {
     );
   }
 
+  const totalLogs = pagination?.total || 0;
+  const totalPages = pagination?.totalPages || 1;
+  const limit = pagination?.limit || 25;
+  const startItem = totalLogs === 0 ? 0 : (page - 1) * limit + 1;
+  const endItem = Math.min(page * limit, totalLogs);
+
   return (
     <div className="flex-1 p-6 md:p-8 max-w-6xl mx-auto space-y-6 bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
       {/* Header */}
@@ -66,8 +72,16 @@ const ActivityPage = () => {
             <span>Workspace Activity</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-            Audit logs of all task, project, member, and document operations.
+            Audit logs of all task, project, member, and document operations across your workspace.
           </p>
+        </div>
+
+        {/* Total Logs Counter Pill */}
+        <div className="flex items-center gap-2 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2 shadow-sm self-start sm:self-auto">
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Total Activity Logs:</span>
+          <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400 font-mono bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
+            {totalLogs}
+          </span>
         </div>
       </div>
 
@@ -80,29 +94,35 @@ const ActivityPage = () => {
         />
 
         {/* Pagination Footer */}
-        {pagination && pagination.totalPages > 1 && (
+        {totalLogs > 0 && (
           <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-slate-600 dark:text-slate-400">
-              Showing page <strong className="text-slate-900 dark:text-white">{pagination.page}</strong> of{" "}
-              <strong className="text-slate-900 dark:text-white">{pagination.totalPages}</strong> (Total{" "}
-              <strong className="text-slate-900 dark:text-white">{pagination.total}</strong> events)
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+              Showing <strong className="text-slate-900 dark:text-white font-semibold">{startItem}–{endItem}</strong> of{" "}
+              <strong className="text-slate-900 dark:text-white font-semibold">{totalLogs}</strong> logs
+              <span className="hidden sm:inline text-slate-400 dark:text-slate-500 ml-1">
+                (25 per page)
+              </span>
             </span>
 
             <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-500 dark:text-slate-400 mr-2">
+                Page <strong className="text-slate-900 dark:text-white">{page}</strong> of{" "}
+                <strong className="text-slate-900 dark:text-white">{totalPages}</strong>
+              </span>
+
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1 || isLoading}
-                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-white px-4 py-1.5 rounded-lg text-sm transition-colors cursor-pointer inline-flex items-center gap-1 border border-slate-200 dark:border-transparent"
+                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-white px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer inline-flex items-center gap-1 border border-slate-200 dark:border-transparent"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Previous</span>
               </button>
+
               <button
-                onClick={() =>
-                  setPage((p) => Math.min(pagination.totalPages, p + 1))
-                }
-                disabled={page >= pagination.totalPages || isLoading}
-                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-white px-4 py-1.5 rounded-lg text-sm transition-colors cursor-pointer inline-flex items-center gap-1 border border-slate-200 dark:border-transparent"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages || isLoading}
+                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-white px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer inline-flex items-center gap-1 border border-slate-200 dark:border-transparent"
               >
                 <span>Next</span>
                 <ChevronRight className="w-4 h-4" />

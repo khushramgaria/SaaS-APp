@@ -5,6 +5,7 @@ const initialState = {
   workspaceActivities: [],
   projectActivities: [],
   pagination: { page: 1, totalPages: 1, total: 0 },
+  projectPagination: { page: 1, totalPages: 1, total: 0 },
   isLoading: false,
   error: null,
 };
@@ -12,7 +13,7 @@ const initialState = {
 // Thunk 1: Fetch workspace-wide activities (paginated)
 export const fetchWorkspaceActivities = createAsyncThunk(
   "activity/fetchWorkspaceActivities",
-  async ({ page = 1, limit = 20 } = {}, { rejectWithValue }) => {
+  async ({ page = 1, limit = 25 } = {}, { rejectWithValue }) => {
     try {
       const response = await apiClient.get(API_ENDPOINTS.ACTIVITIES.WORKSPACE, {
         params: { page, limit },
@@ -26,14 +27,18 @@ export const fetchWorkspaceActivities = createAsyncThunk(
   }
 );
 
-// Thunk 2: Fetch project-scoped activities
+// Thunk 2: Fetch project-scoped activities (paginated)
 export const fetchProjectActivities = createAsyncThunk(
   "activity/fetchProjectActivities",
-  async (projectId, { rejectWithValue }) => {
+  async (args, { rejectWithValue }) => {
     try {
+      const projectId = typeof args === "string" ? args : args?.projectId;
+      const page = typeof args === "object" ? args.page || 1 : 1;
+      const limit = typeof args === "object" ? args.limit || 25 : 25;
+
       const response = await apiClient.get(
         API_ENDPOINTS.ACTIVITIES.PROJECT(projectId),
-        { params: { limit: 15 } }
+        { params: { page, limit } }
       );
       return response.data;
     } catch (error) {
@@ -77,7 +82,14 @@ const activitySlice = createSlice({
       })
       .addCase(fetchProjectActivities.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.projectActivities = action.payload?.data || [];
+        const payloadData = action.payload?.data;
+        if (Array.isArray(payloadData)) {
+          state.projectActivities = payloadData;
+          state.projectPagination = { page: 1, totalPages: 1, total: payloadData.length };
+        } else {
+          state.projectActivities = payloadData?.activities || [];
+          state.projectPagination = payloadData?.pagination || { page: 1, totalPages: 1, total: 0 };
+        }
       })
       .addCase(fetchProjectActivities.rejected, (state, action) => {
         state.isLoading = false;

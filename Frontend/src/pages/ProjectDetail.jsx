@@ -19,6 +19,8 @@ import {
   Lock,
   Tag,
   Trash2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Button from "../components/ui/Button";
 import SkeletonLoader from "../components/common/SkeletonLoader";
@@ -63,7 +65,7 @@ const ProjectDetail = () => {
     (state) => state.documents
   );
   const { members: workspaceMembers } = useSelector((state) => state.members);
-  const { projectActivities, isLoading: isActivityLoading } = useSelector(
+  const { projectActivities, projectPagination, isLoading: isActivityLoading } = useSelector(
     (state) => state.activity
   );
 
@@ -72,6 +74,7 @@ const ProjectDetail = () => {
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
   const [isCreateDocModalOpen, setIsCreateDocModalOpen] = useState(false);
+  const [activityPage, setActivityPage] = useState(1);
 
   // Delete Document Confirmation Modal State
   const [deleteDocTarget, setDeleteDocTarget] = useState(null);
@@ -86,13 +89,13 @@ const ProjectDetail = () => {
       dispatch(fetchTasks({ projectId }));
       dispatch(fetchDocuments({ projectId }));
       dispatch(fetchMembers());
-      dispatch(fetchProjectActivities(projectId));
+      dispatch(fetchProjectActivities({ projectId, page: activityPage, limit: 25 }));
     }
 
     return () => {
       dispatch(clearCurrentProject());
     };
-  }, [dispatch, projectId]);
+  }, [dispatch, projectId, activityPage]);
 
   const handleTaskClick = (task) => {
     dispatch(setCurrentTask(task));
@@ -405,12 +408,62 @@ const ProjectDetail = () => {
                 <Activity className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                 <span>Recent Project Activity</span>
               </h3>
+
+              {projectPagination?.total > 0 && (
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium bg-slate-100 dark:bg-slate-950 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800">
+                  <span>Total Logs:</span>
+                  <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono">
+                    {projectPagination.total}
+                  </span>
+                </div>
+              )}
             </div>
+
             <ActivityTimeline
               activities={projectActivities}
               isLoading={isActivityLoading}
               emptyMessage="No activity recorded for this project yet."
             />
+
+            {/* Pagination Footer */}
+            {projectPagination?.total > 0 && (
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                  Showing <strong className="text-slate-900 dark:text-white font-semibold">
+                    {(activityPage - 1) * 25 + 1}–{Math.min(activityPage * 25, projectPagination.total)}
+                  </strong> of{" "}
+                  <strong className="text-slate-900 dark:text-white font-semibold">{projectPagination.total}</strong> logs
+                  <span className="hidden sm:inline text-slate-400 dark:text-slate-500 ml-1">
+                    (25 per page)
+                  </span>
+                </span>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 mr-2">
+                    Page <strong className="text-slate-900 dark:text-white">{activityPage}</strong> of{" "}
+                    <strong className="text-slate-900 dark:text-white">{projectPagination.totalPages || 1}</strong>
+                  </span>
+
+                  <button
+                    onClick={() => setActivityPage((p) => Math.max(1, p - 1))}
+                    disabled={activityPage <= 1 || isActivityLoading}
+                    className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-white px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer inline-flex items-center gap-1 border border-slate-200 dark:border-transparent"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                    <span>Previous</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActivityPage((p) => Math.min(projectPagination.totalPages || 1, p + 1))}
+                    disabled={activityPage >= (projectPagination.totalPages || 1) || isActivityLoading}
+                    className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-white px-3 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer inline-flex items-center gap-1 border border-slate-200 dark:border-transparent"
+                  >
+                    <span>Next</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
