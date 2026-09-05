@@ -16,6 +16,9 @@ import {
   FilePlus,
   FileEdit,
   FileMinus,
+  UserCog,
+  Camera,
+  Key,
   Activity as DefaultActivityIcon,
 } from "lucide-react";
 
@@ -118,7 +121,7 @@ export const formatActivity = (activity) => {
   const relativeTime = getRelativeTime(createdAt);
 
   const renderActor = () => (
-    <span className="font-semibold text-white mr-1">{userName}</span>
+    <span className="font-semibold text-slate-900 dark:text-white mr-1">{userName}</span>
   );
 
   switch (action) {
@@ -420,6 +423,52 @@ export const formatActivity = (activity) => {
         ),
         icon: FileMinus,
         iconColor: "text-rose-400 bg-rose-500/10 border-rose-500/20",
+        relativeTime,
+      };
+
+    case "USER_PROFILE_UPDATED":
+      return {
+        titleNode: (
+          <span className="text-slate-300">
+            {renderActor()}
+            changed their display name from{" "}
+            <span className="font-medium text-white">
+              "{metadata.previousName || "old name"}"
+            </span>{" "}
+            to{" "}
+            <span className="font-medium text-white">
+              "{metadata.updatedName || "new name"}"
+            </span>
+          </span>
+        ),
+        icon: UserCog,
+        iconColor: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+        relativeTime,
+      };
+
+    case "USER_AVATAR_UPDATED":
+      return {
+        titleNode: (
+          <span className="text-slate-300">
+            {renderActor()}
+            updated their profile avatar
+          </span>
+        ),
+        icon: Camera,
+        iconColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+        relativeTime,
+      };
+
+    case "USER_PASSWORD_CHANGED":
+      return {
+        titleNode: (
+          <span className="text-slate-300">
+            {renderActor()}
+            changed their account password
+          </span>
+        ),
+        icon: Key,
+        iconColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
         relativeTime,
       };
 

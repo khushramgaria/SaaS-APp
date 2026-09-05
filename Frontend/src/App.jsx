@@ -22,9 +22,9 @@ import { getMeUser } from "./redux/slices/authSlice";
 // Main App Layout component containing Sidebar and main content Outlet
 const AppLayout = () => {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto min-w-0 bg-slate-950">
+      <main className="flex-1 overflow-y-auto min-w-0 bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
         <Outlet />
       </main>
     </div>

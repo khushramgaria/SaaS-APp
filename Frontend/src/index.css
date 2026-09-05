@@ -1,19 +1,30 @@
 @import "tailwindcss";
 
-/* Custom Sleek Dark Scrollbar */
+@variant dark (&:where(.dark, .dark *));
+
+/* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #f1f5f9;
   border-radius: 8px;
 }
 
+html.dark ::-webkit-scrollbar-track {
+  background: #090d16;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #cbd5e1;
   border-radius: 8px;
+  border: 2px solid #f1f5f9;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
   border: 2px solid #090d16;
 }
 
@@ -24,6 +35,10 @@
 /* Firefox scrollbar support */
 * {
   scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+html.dark * {
   scrollbar-color: #1e293b #090d16;
 }
 
@@ -32,6 +47,14 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+  color: #0f172a;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark body {
+  background-color: #0b0f19;
+  color: #f8fafc;
 }
 
 /* TipTap / ProseMirror Editor & Rich Text Content Styles */

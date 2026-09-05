@@ -69,7 +69,7 @@ const Sidebar = () => {
   const initials = getInitials(userName);
 
   return (
-    <aside className="w-64 h-screen bg-[#0A0E1A] text-slate-200 border-r border-slate-800/60 flex flex-col justify-between p-4 select-none shrink-0 relative">
+    <aside className="w-64 h-screen bg-white dark:bg-[#0A0E1A] text-slate-700 dark:text-slate-200 border-r border-slate-200 dark:border-slate-800/60 flex flex-col justify-between p-4 select-none shrink-0 relative transition-colors duration-200">
       {/* Top Header & Navigation */}
       <div className="flex flex-col gap-6">
         {/* Logo Section */}
@@ -78,11 +78,11 @@ const Sidebar = () => {
             <Users className="w-5 h-5 fill-current" />
           </div>
           <div className="flex flex-col overflow-hidden">
-            <span className="text-xl font-bold text-white tracking-tight truncate">
+            <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight truncate">
               {workspaceName}
             </span>
             {activeWorkspace?.name && (
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-violet-400 -mt-1 flex items-center gap-1">
+              <span className="text-[10px] uppercase font-semibold tracking-wider text-violet-600 dark:text-violet-400 -mt-1 flex items-center gap-1">
                 <Building2 className="w-2.5 h-2.5 inline" /> Workspace
               </span>
             )}
@@ -101,7 +101,7 @@ const Sidebar = () => {
                   `flex items-center gap-3.5 px-3.5 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
                     isActive
                       ? "bg-violet-600 text-white shadow-lg shadow-violet-600/30 font-semibold"
-                      : "text-slate-300 hover:text-white hover:bg-slate-800/50"
+                      : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
                   }`
                 }
               >
@@ -114,17 +114,17 @@ const Sidebar = () => {
       </div>
 
       {/* Bottom User Profile Section */}
-      <div className="pt-4 border-t border-slate-800/80 relative" ref={menuRef}>
+      <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 relative" ref={menuRef}>
         {/* User Menu Dropdown Popup */}
         {showUserMenu && (
-          <div className="absolute bottom-full left-0 w-full mb-2 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-1 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
-            <div className="px-3 py-2 border-b border-slate-800/80">
-              <p className="text-xs font-semibold text-slate-200 truncate">{userName}</p>
-              <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
+          <div className="absolute bottom-full left-0 w-full mb-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl p-1 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
+            <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800/80">
+              <p className="text-xs font-semibold text-slate-900 dark:text-slate-200 truncate">{userName}</p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
             </div>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors mt-1 cursor-pointer"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-700 dark:hover:text-red-300 transition-colors mt-1 cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span>Log out</span>
@@ -134,22 +134,26 @@ const Sidebar = () => {
 
         <div
           onClick={() => setShowUserMenu((prev) => !prev)}
-          className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-800/50 cursor-pointer transition-colors group"
+          className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/50 cursor-pointer transition-colors group"
         >
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-full bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-300 font-bold text-sm shrink-0 overflow-hidden shadow-inner">
-              {initials}
+            <div className="w-10 h-10 rounded-full bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-600 dark:text-violet-300 font-bold text-sm shrink-0 overflow-hidden shadow-inner">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={userName} className="w-full h-full object-cover" />
+              ) : (
+                initials
+              )}
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-semibold text-white truncate group-hover:text-violet-200 transition-colors">
+              <span className="text-sm font-semibold text-slate-900 dark:text-white truncate group-hover:text-violet-600 dark:group-hover:text-violet-200 transition-colors">
                 {userName}
               </span>
-              <span className="text-xs text-slate-400 capitalize">{userRole}</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400 capitalize">{userRole}</span>
             </div>
           </div>
           <ChevronDown
-            className={`w-4 h-4 text-slate-400 shrink-0 group-hover:text-slate-200 transition-transform duration-200 ${
-              showUserMenu ? "rotate-180 text-violet-400" : ""
+            className={`w-4 h-4 text-slate-400 shrink-0 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-transform duration-200 ${
+              showUserMenu ? "rotate-180 text-violet-600 dark:text-violet-400" : ""
             }`}
           />
         </div>

@@ -54,6 +54,11 @@ const activitySchema = new mongoose.Schema(
         // Projects
         "PROJECT_CREATED",
         "PROJECT_MEMBERS_UPDATED",
+
+        // Settings & User Actions
+        "USER_PROFILE_UPDATED",
+        "USER_AVATAR_UPDATED",
+        "USER_PASSWORD_CHANGED",
       ],
     },
     metadata: {
@@ -74,6 +79,9 @@ const activitySchema = new mongoose.Schema(
       fromRole: String,
       toRole: String,
       role: String,
+      previousName: String,
+      updatedName: String,
+      avatarUrl: String,
     },
   },
   { timestamps: true },

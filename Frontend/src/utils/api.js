@@ -44,6 +44,11 @@ export const API_ENDPOINTS = {
     WORKSPACE: "/activities",
     PROJECT: (projectId) => `/activities/projects/${projectId}`,
   },
+  USERS: {
+    PROFILE: "/users/profile",
+    AVATAR: "/users/avatar",
+    CHANGE_PASSWORD: "/users/change-password",
+  },
 };
 
 // Create Axios Instance

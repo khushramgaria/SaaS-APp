@@ -30,15 +30,15 @@ const ActivityPage = () => {
   if (!isAllowed) {
     return (
       <div className="flex-1 p-6 md:p-8 max-w-4xl mx-auto flex items-center justify-center min-h-[70vh]">
-        <div className="bg-[#111827] border border-slate-800 rounded-2xl p-8 text-center max-w-md w-full shadow-2xl space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center mx-auto">
+        <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center max-w-md w-full shadow-2xl space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 dark:text-rose-400 flex items-center justify-center mx-auto">
             <ShieldAlert className="w-7 h-7" />
           </div>
           <div className="space-y-1">
-            <h2 className="text-xl font-bold text-white tracking-tight">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
               Access Restricted
             </h2>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Workspace Activity logs are restricted to Workspace Owners and Admins only.
             </p>
           </div>
@@ -55,24 +55,24 @@ const ActivityPage = () => {
   }
 
   return (
-    <div className="flex-1 p-6 md:p-8 max-w-6xl mx-auto space-y-6">
+    <div className="flex-1 p-6 md:p-8 max-w-6xl mx-auto space-y-6 bg-slate-50 dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600/10 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 dark:border-indigo-500/30 flex items-center justify-center">
               <ActivityIcon className="w-5 h-5" />
             </div>
             <span>Workspace Activity</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Audit logs of all task, project, member, and document operations.
           </p>
         </div>
       </div>
 
       {/* Main Content Card Container */}
-      <div className="bg-[#111827] border border-slate-800 rounded-xl p-6 space-y-6 shadow-xl">
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-6 shadow-xl transition-colors duration-200">
         <ActivityTimeline
           activities={workspaceActivities}
           isLoading={isLoading}
@@ -81,18 +81,18 @@ const ActivityPage = () => {
 
         {/* Pagination Footer */}
         {pagination && pagination.totalPages > 1 && (
-          <div className="pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-slate-400">
-              Showing page <strong className="text-white">{pagination.page}</strong> of{" "}
-              <strong className="text-white">{pagination.totalPages}</strong> (Total{" "}
-              <strong className="text-white">{pagination.total}</strong> events)
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span className="text-xs text-slate-600 dark:text-slate-400">
+              Showing page <strong className="text-slate-900 dark:text-white">{pagination.page}</strong> of{" "}
+              <strong className="text-slate-900 dark:text-white">{pagination.totalPages}</strong> (Total{" "}
+              <strong className="text-slate-900 dark:text-white">{pagination.total}</strong> events)
             </span>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1 || isLoading}
-                className="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-4 py-1.5 rounded-lg text-sm transition-colors cursor-pointer inline-flex items-center gap-1"
+                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-white px-4 py-1.5 rounded-lg text-sm transition-colors cursor-pointer inline-flex items-center gap-1 border border-slate-200 dark:border-transparent"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Previous</span>
@@ -102,7 +102,7 @@ const ActivityPage = () => {
                   setPage((p) => Math.min(pagination.totalPages, p + 1))
                 }
                 disabled={page >= pagination.totalPages || isLoading}
-                className="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-white px-4 py-1.5 rounded-lg text-sm transition-colors cursor-pointer inline-flex items-center gap-1"
+                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-slate-800 dark:text-white px-4 py-1.5 rounded-lg text-sm transition-colors cursor-pointer inline-flex items-center gap-1 border border-slate-200 dark:border-transparent"
               >
                 <span>Next</span>
                 <ChevronRight className="w-4 h-4" />
