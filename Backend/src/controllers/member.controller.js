@@ -12,15 +12,17 @@ export const getMembers = async (req, res, next) => {
       .populate("userId", "name email avatarUrl")
       .sort({ createdAt: 1 });
 
-    const formattedMembers = members.map((m) => ({
-      membershipId: m._id,
-      userId: m.userId._id,
-      name: m.userId.name,
-      email: m.userId.email,
-      avatarUrl: m.userId.avatarUrl,
-      role: m.role,
-      joinedAt: m.createdAt,
-    }));
+    const formattedMembers = members
+      .filter((m) => m.userId)
+      .map((m) => ({
+        membershipId: m._id,
+        userId: m.userId._id,
+        name: m.userId.name,
+        email: m.userId.email,
+        avatarUrl: m.userId.avatarUrl,
+        role: m.role,
+        joinedAt: m.createdAt,
+      }));
 
     return res.status(200).json({ success: true, data: formattedMembers });
   } catch (error) {

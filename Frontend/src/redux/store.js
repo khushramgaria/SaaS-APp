@@ -5,6 +5,7 @@ import projectReducer from "./slices/projectSlice";
 import taskReducer from "./slices/taskSlice";
 import documentReducer from "./slices/documentSlice";
 import activityReducer from "./slices/activitySlice";
+import chatReducer from "./slices/chatSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     tasks: taskReducer,
     documents: documentReducer,
     activity: activityReducer,
+    chat: chatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

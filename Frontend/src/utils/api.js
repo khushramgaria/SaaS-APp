@@ -49,6 +49,13 @@ export const API_ENDPOINTS = {
     AVATAR: "/users/avatar",
     CHANGE_PASSWORD: "/users/change-password",
   },
+  CHAT: {
+    CONVERSATIONS: "/chat/conversations",
+    CREATE_CHANNEL: "/chat/channels",
+    DIRECT_MESSAGE: "/chat/direct",
+    MESSAGES: (conversationId) => `/chat/conversations/${conversationId}/messages`,
+    MARK_READ: (conversationId) => `/chat/conversations/${conversationId}/read`,
+  },
 };
 
 // Create Axios Instance

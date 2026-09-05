@@ -1,6 +1,8 @@
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
+import { Conversation } from "../models/conversation.model.js";
+import { Message } from "../models/message.model.js";
 
 let io = null;
 
@@ -76,6 +78,72 @@ export const initSocket = (httpServer) => {
       // Broadcast updated online user ID array to everyone in the workspace
       const onlineUserIds = Array.from(usersMap.keys());
       io.to(`workspace:${workspaceId}`).emit("online_users", onlineUserIds);
+    });
+
+    // Conversation Room: Join when user opens chat thread
+    socket.on("join_conversation", (conversationId) => {
+      if (conversationId) {
+        socket.join(`conversation:${conversationId}`);
+      }
+    });
+
+    // Conversation Room: Leave when user navigates away
+    socket.on("leave_conversation", (conversationId) => {
+      if (conversationId) {
+        socket.leave(`conversation:${conversationId}`);
+      }
+    });
+
+    // Real-Time Message Dispatch
+    socket.on("send_message", async ({ conversationId, content }) => {
+      try {
+        if (!conversationId || !content || !content.trim()) return;
+
+        // Verify participant access
+        const conversation = await Conversation.findOne({
+          _id: conversationId,
+          participants: socket.user._id,
+        });
+
+        if (!conversation) {
+          socket.emit("chat_error", { message: "Access denied to conversation." });
+          return;
+        }
+
+        // 1. Create message with sender auto-added to readBy
+        const message = await Message.create({
+          conversationId,
+          workspaceId: conversation.workspaceId,
+          senderId: socket.user._id,
+          content: content.trim(),
+          readBy: [socket.user._id],
+        });
+
+        // 2. Update conversation lastMessage & lastMessageAt
+        conversation.lastMessage = message._id;
+        conversation.lastMessageAt = message.createdAt;
+        await conversation.save();
+
+        const populatedMessage = await message.populate(
+          "senderId",
+          "name email avatarUrl"
+        );
+
+        // 3. Broadcast message to everyone inside the conversation room
+        io.to(`conversation:${conversationId}`).emit("new_message", populatedMessage);
+
+        // 4. Notify all participants (updates sidebar snippet, sorting & unread count)
+        conversation.participants.forEach((participantId) => {
+          io.to(`user:${participantId.toString()}`).emit("conversation_updated", {
+            conversationId,
+            lastMessage: populatedMessage,
+            lastMessageAt: message.createdAt,
+          });
+        });
+      } catch (error) {
+        console.error("Socket send_message error:", error);
+        socket.emit("chat_error", { message: "Failed to send message." });
+      }
     });
 
     socket.on("disconnect", () => {
