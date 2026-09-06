@@ -3,17 +3,15 @@ import { io } from "socket.io-client";
 let socket = null;
 
 const getSocketUrl = () => {
-  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-  if (import.meta.env.VITE_SOCKET_URL) return import.meta.env.VITE_SOCKET_URL;
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL.replace(/\/api\/v1\/?$/, "");
-  }
+  if (import.meta.env.VITE_API_BASE_URL)
+    return import.meta.env.VITE_API_BASE_URL;
   return "http://localhost:8000";
 };
 
 export const connectSocket = () => {
   if (!socket) {
-    const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+    const token =
+      localStorage.getItem("token") || localStorage.getItem("accessToken");
     const SOCKET_URL = getSocketUrl();
 
     socket = io(SOCKET_URL, {
@@ -27,7 +25,8 @@ export const connectSocket = () => {
 
   if (socket && !socket.connected) {
     // Ensure latest token on reconnect attempt
-    const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+    const token =
+      localStorage.getItem("token") || localStorage.getItem("accessToken");
     socket.auth = { token };
     socket.connect();
   }

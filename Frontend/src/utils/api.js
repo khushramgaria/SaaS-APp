@@ -1,10 +1,7 @@
 import axios from "axios";
 
-// API Base URL (defaults to http://localhost:3000/api/v1)
-export const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1";
+export const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/v1`;
 
-// Centralized API endpoints list
 export const API_ENDPOINTS = {
   AUTH: {
     REGISTER: "/auth/register",
@@ -53,7 +50,8 @@ export const API_ENDPOINTS = {
     CONVERSATIONS: "/chat/conversations",
     CREATE_CHANNEL: "/chat/channels",
     DIRECT_MESSAGE: "/chat/direct",
-    MESSAGES: (conversationId) => `/chat/conversations/${conversationId}/messages`,
+    MESSAGES: (conversationId) =>
+      `/chat/conversations/${conversationId}/messages`,
     MARK_READ: (conversationId) => `/chat/conversations/${conversationId}/read`,
   },
 };
