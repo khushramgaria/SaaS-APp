@@ -16,6 +16,7 @@ import {
   Building2,
 } from "lucide-react";
 import { logout } from "../redux/slices/authSlice";
+import { OfflineSyncBadge } from "./common/OfflineSyncBadge";
 
 // Array of navigation items to avoid repeating code
 const navItems = [
@@ -69,28 +70,37 @@ const Sidebar = () => {
   const initials = getInitials(userName);
 
   return (
-    <aside className="w-64 h-screen bg-white dark:bg-[#0A0E1A] text-slate-700 dark:text-slate-200 border-r border-slate-200 dark:border-slate-800/60 flex flex-col justify-between p-4 select-none shrink-0 relative transition-colors duration-200">
+    <aside className="w-64 h-full bg-white dark:bg-[#0A0E1A] text-slate-700 dark:text-slate-200 border-r border-slate-200 dark:border-slate-800/60 flex flex-col justify-between p-4 select-none shrink-0 relative transition-colors duration-200">
       {/* Top Header & Navigation */}
-      <div className="flex flex-col gap-6">
-        {/* Logo Section */}
-        <div className="flex items-center gap-3 px-2 py-2">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-violet-600/30 shrink-0">
-            <Users className="w-5 h-5 fill-current" />
+      <div className="flex flex-col gap-5">
+        {/* Logo & Offline Status Section */}
+        <div className="flex flex-col gap-3 px-2 pt-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-violet-600/30 shrink-0">
+                <Users className="w-4.5 h-4.5 fill-current" />
+              </div>
+              <div className="flex flex-col overflow-hidden">
+                <span className="text-lg font-bold text-slate-900 dark:text-white tracking-tight truncate">
+                  {workspaceName}
+                </span>
+                {activeWorkspace?.name && (
+                  <span className="text-[10px] uppercase font-semibold tracking-wider text-violet-600 dark:text-violet-400 -mt-1 flex items-center gap-1">
+                    <Building2 className="w-2.5 h-2.5 inline" /> Workspace
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col overflow-hidden">
-            <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight truncate">
-              {workspaceName}
-            </span>
-            {activeWorkspace?.name && (
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-violet-600 dark:text-violet-400 -mt-1 flex items-center gap-1">
-                <Building2 className="w-2.5 h-2.5 inline" /> Workspace
-              </span>
-            )}
+
+          {/* Network Connection Badge */}
+          <div className="pt-1">
+            <OfflineSyncBadge />
           </div>
         </div>
 
         {/* Mapped Navigation Links */}
-        <nav className="flex flex-col gap-1.5">
+        <nav className="flex flex-col gap-1.5 mt-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -98,14 +108,14 @@ const Sidebar = () => {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center gap-3.5 px-3.5 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
+                  `flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${
                     isActive
                       ? "bg-violet-600 text-white shadow-lg shadow-violet-600/30 font-semibold"
                       : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
                   }`
                 }
               >
-                <Icon className="w-5 h-5 shrink-0" />
+                <Icon className="w-4.5 h-4.5 shrink-0" />
                 <span>{item.name}</span>
               </NavLink>
             );
@@ -137,7 +147,7 @@ const Sidebar = () => {
           className="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/50 cursor-pointer transition-colors group"
         >
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-full bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-600 dark:text-violet-300 font-bold text-sm shrink-0 overflow-hidden shadow-inner">
+            <div className="w-9 h-9 rounded-full bg-violet-600/20 border border-violet-500/40 flex items-center justify-center text-violet-600 dark:text-violet-300 font-bold text-xs shrink-0 overflow-hidden shadow-inner">
               {user?.avatarUrl ? (
                 <img src={user.avatarUrl} alt={userName} className="w-full h-full object-cover" />
               ) : (

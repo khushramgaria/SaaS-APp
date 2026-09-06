@@ -3,6 +3,8 @@ import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "./components/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { OfflineBanner } from "./components/common/OfflineBanner";
+import { PWAUpdatePrompt } from "./components/common/PWAUpdatePrompt";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import AcceptInvite from "./pages/auth/AcceptInvite";
@@ -19,14 +21,18 @@ import Activity from "./pages/Activity";
 import Settings from "./pages/Settings";
 import { getMeUser } from "./redux/slices/authSlice";
 
-// Main App Layout component containing Sidebar and main content Outlet
+// Main App Layout component containing Sidebar, Offline Banner and main content Outlet
 const AppLayout = () => {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto min-w-0 bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
-        <Outlet />
-      </main>
+    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
+      <OfflineBanner />
+      <div className="flex flex-1 overflow-hidden min-h-0">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto min-w-0 bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
+          <Outlet />
+        </main>
+      </div>
+      <PWAUpdatePrompt />
     </div>
   );
 };

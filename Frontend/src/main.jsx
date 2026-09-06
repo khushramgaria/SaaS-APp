@@ -7,6 +7,10 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { Toaster } from "react-hot-toast";
+import { registerSW } from "virtual:pwa-register";
+
+// Automatically activate service worker updates
+registerSW({ immediate: true });
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -14,27 +18,27 @@ createRoot(document.getElementById("root")).render(
       <ThemeProvider>
         <BrowserRouter>
           <App />
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: "#0f172a",
-              color: "#f8fafc",
-              border: "1px solid #1e293b",
-              borderRadius: "0.75rem",
-              fontSize: "0.875rem",
-            },
-            success: {
-              iconTheme: {
-                primary: "#7c3aed",
-                secondary: "#ffffff",
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: "#0f172a",
+                color: "#f8fafc",
+                border: "1px solid #1e293b",
+                borderRadius: "0.75rem",
+                fontSize: "0.875rem",
               },
-            },
-          }}
-        />
+              success: {
+                iconTheme: {
+                  primary: "#7c3aed",
+                  secondary: "#ffffff",
+                },
+              },
+            }}
+          />
         </BrowserRouter>
       </ThemeProvider>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );

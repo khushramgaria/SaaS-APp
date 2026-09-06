@@ -1,4 +1,6 @@
 import axios from "axios";
+import { addToOfflineQueue } from "../services/offlineSyncService";
+import toast from "react-hot-toast";
 
 export const BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api/v1`;
 
@@ -83,10 +85,47 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Response Interceptor to handle errors and token expiration
+// Response Interceptor to handle errors, network failures, and offline queuing
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    const isNetworkError =
+      !error.response ||
+      error.code === "ERR_NETWORK" ||
+      error.code === "ECONNABORTED" ||
+      !navigator.onLine;
+
+    const method = error.config?.method?.toUpperCase() || "GET";
+
+    // If write operation fails due to network/offline status, queue it automatically!
+    if (isNetworkError && ["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
+      const url = error.config.url;
+      const payload = error.config.data
+        ? typeof error.config.data === "string"
+          ? JSON.parse(error.config.data)
+          : error.config.data
+        : null;
+
+      addToOfflineQueue({
+        method,
+        url,
+        payload,
+      });
+
+      toast.success(
+        "Network connection offline. Action queued to sync automatically!",
+        { icon: "📝", duration: 4000 }
+      );
+
+      return Promise.resolve({
+        data: {
+          success: true,
+          offline: true,
+          message: "Action queued for sync.",
+        },
+      });
+    }
+
     const message =
       error.response?.data?.message ||
       error.message ||
@@ -97,6 +136,7 @@ apiClient.interceptors.response.use(
       status: error.response?.status,
       message,
       data: error.response?.data,
+      isOffline: isNetworkError,
     });
   },
 );
