@@ -29,9 +29,10 @@ TeamFlow is a production-grade workspace collaboration platform inspired by Noti
 
 ```mermaid
 flowchart TD
-    User[Browser / PWA] -->|HTTP / WebSocket| Nginx[Nginx Proxy :3000]
-    Nginx -->|Reverse Proxy :8000| Backend[Express Backend]
-    Backend -->|Database Queries| Mongo[(MongoDB)]
-    Backend -->|Read-through Cache| Redis[(Redis Cloud)]
-    Backend -->|Job Producer| BullMQ[BullMQ Queue]
-    BullMQ -->|Async Job Consumer| Worker[Email Background Worker]
+    User["Browser / PWA"] -->|"HTTP / WebSocket"| Nginx["Nginx Proxy (Port 3000)"]
+    Nginx -->|"Reverse Proxy (Port 8000)"| Backend["Express Backend"]
+    Backend -->|"Database Queries"| Mongo[("MongoDB")]
+    Backend -->|"Read-through Cache"| Redis[("Redis Cloud")]
+    Backend -->|"Job Producer"| BullMQ["BullMQ Queue"]
+    BullMQ -->|"Async Job Consumer"| Worker["Email Background Worker"]
+```
