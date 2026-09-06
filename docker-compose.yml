@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # 1. Redis Service (for Caching & BullMQ)
   redis:
@@ -13,7 +11,7 @@ services:
 
   # 2. MongoDB Service
   mongo:
-    image: mongo:7-alpine
+    image: mongo:7
     container_name: teamflow-mongo
     restart: unless-stopped
     ports:
@@ -24,24 +22,14 @@ services:
   # 3. Backend Service (Express + Socket.io + BullMQ)
   backend:
     build:
-      context: ./backend
+      context: ./Backend
       dockerfile: Dockerfile
     container_name: teamflow-backend
     restart: unless-stopped
     ports:
       - "8000:8000"
-    environment:
-      - PORT=8000
-      - DB_URI=mongodb+srv://yashgarg9041_db_user:WtSKwgYDsNFD0ctc@teamflow.i7eqguj.mongodb.net/
-      - REDIS_URL=redis://default:yaY8fekxX6rFpV41Vifve4LYQWhUfcix@quiver-artisanal-painted-61984.db.redis.io:12470
-      - REDIS_HOST=quiver-artisanal-painted-61984.db.redis.io
-      - REDIS_PORT=12470
-      - REDIS_PASSWORD=yaY8fekxX6rFpV41Vifve4LYQWhUfcix
-      - CLIENT_URL=http://localhost:8000
-      - ACCESS_TOKEN_SECRET=bvuidsbvb873bfhew8v98e
-      - REFRESH_TOKEN_SECRET=hrebhrececn80990
-      - ACCESS_TOKEN_EXPIRY=1d
-      - REFRESH_TOKEN_EXPIRY=6d
+    env_file:
+      - ./Backend/.env
     depends_on:
       - mongo
       - redis
@@ -49,7 +37,7 @@ services:
   # 4. Frontend Service (Vite + Nginx)
   frontend:
     build:
-      context: ./frontend
+      context: ./Frontend
       dockerfile: Dockerfile
     container_name: teamflow-frontend
     restart: unless-stopped
