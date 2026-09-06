@@ -37,26 +37,34 @@ flowchart TD
     BullMQ -->|"Async Job Consumer"| Worker["Email Background Worker"]
 ```
 
+```mermaid
 erDiagram
-    USER ||--o{ WORKSPACE : "creates / owns"
+    USER ||--o{ WORKSPACE : "owns"
     USER ||--o{ WORKSPACE_MEMBER : "participates as"
-    USER ||--o{ WORKSPACE_INVITE : "sends"
+    USER ||--o{ WORKSPACE_INVITE : "invites"
+    USER ||--o{ PROJECT : "leads"
     USER ||--o{ TASK : "assigned to"
-    USER ||--o{ TASK : "creates"
-    USER ||--o{ TASK_COMMENT : "posts"
-    USER ||--o{ CHANNEL_MESSAGE : "sends"
-    USER ||--o{ ACTIVITY_LOG : "performs"
-    USER ||--o{ NOTIFICATION : "receives"
+    USER ||--o{ TASK : "reports"
+    USER ||--o{ DOCUMENT : "authors"
+    USER ||--o{ CONVERSATION : "creates"
+    USER ||--o{ MESSAGE : "sends"
+    USER ||--o{ ACTIVITY : "triggers"
 
     WORKSPACE ||--|{ WORKSPACE_MEMBER : "contains"
     WORKSPACE ||--o{ WORKSPACE_INVITE : "issues"
+    WORKSPACE ||--o{ PROJECT : "contains"
     WORKSPACE ||--o{ TASK : "organizes"
-    WORKSPACE ||--o{ CHANNEL : "hosts"
-    WORKSPACE ||--o{ ACTIVITY_LOG : "tracks"
-    WORKSPACE ||--o{ NOTIFICATION : "scopes"
+    WORKSPACE ||--o{ DOCUMENT : "stores"
+    WORKSPACE ||--o{ CONVERSATION : "hosts"
+    WORKSPACE ||--o{ MESSAGE : "scopes"
+    WORKSPACE ||--o{ ACTIVITY : "records"
 
-    CHANNEL ||--o{ CHANNEL_MESSAGE : "stores"
-    TASK ||--o{ TASK_COMMENT : "has"
+    PROJECT ||--o{ TASK : "contains"
+    PROJECT ||--o{ DOCUMENT : "organizes"
+    PROJECT ||--o{ ACTIVITY : "tracks"
+
+    TASK ||--o{ ACTIVITY : "logs"
+    CONVERSATION ||--o{ MESSAGE : "contains"
 
     USER {
         ObjectId _id PK
@@ -73,9 +81,7 @@ erDiagram
         ObjectId _id PK
         string name
         string slug UK
-        string description
         ObjectId ownerId FK
-        string iconUrl
         date createdAt
         date updatedAt
     }
@@ -93,75 +99,96 @@ erDiagram
     WORKSPACE_INVITE {
         ObjectId _id PK
         ObjectId workspaceId FK
-        ObjectId invitedBy FK
         string email
-        string role
+        string role "ADMIN or MEMBER or VIEWER"
         string token UK
-        string status "PENDING or ACCEPTED or EXPIRED"
+        ObjectId inviterId FK
         date expiresAt
         date createdAt
+        date updatedAt
+    }
+
+    PROJECT {
+        ObjectId _id PK
+        ObjectId workspaceId FK
+        string name
+        string description
+        string key
+        ObjectId leadId FK
+        ObjectIdArray members FK
+        number taskCounter
+        string status "ACTIVE or ARCHIVED"
+        date createdAt
+        date updatedAt
     }
 
     TASK {
         ObjectId _id PK
         ObjectId workspaceId FK
+        ObjectId projectId FK
+        number taskNumber
+        string taskKey
         string title
         string description
-        string status "TODO or IN_PROGRESS or DONE"
+        string status "BACKLOG or TODO or IN_PROGRESS or IN_REVIEW or DONE"
         string priority "LOW or MEDIUM or HIGH or URGENT"
         ObjectId assigneeId FK
-        ObjectId creatorId FK
-        number position
+        ObjectId reporterId FK
         date dueDate
+        stringArray tags
         date createdAt
         date updatedAt
     }
 
-    TASK_COMMENT {
-        ObjectId _id PK
-        ObjectId taskId FK
-        ObjectId userId FK
-        string content
-        date createdAt
-        date updatedAt
-    }
-
-    CHANNEL {
+    DOCUMENT {
         ObjectId _id PK
         ObjectId workspaceId FK
-        string name
-        string topic
-        boolean isPrivate
+        ObjectId projectId FK
+        string title
+        string content
+        ObjectId authorId FK
+        ObjectIdArray allowedMembers FK
+        stringArray tags
+        boolean isArchived
         date createdAt
         date updatedAt
     }
 
-    CHANNEL_MESSAGE {
+    CONVERSATION {
         ObjectId _id PK
-        ObjectId channelId FK
+        ObjectId workspaceId FK
+        string type "CHANNEL or DIRECT"
+        string name
+        string description
+        ObjectIdArray participants FK
+        ObjectId lastMessage FK
+        date lastMessageAt
+        ObjectId createdBy FK
+        date createdAt
+        date updatedAt
+    }
+
+    MESSAGE {
+        ObjectId _id PK
+        ObjectId conversationId FK
+        ObjectId workspaceId FK
         ObjectId senderId FK
         string content
+        ObjectIdArray readBy FK
         date createdAt
         date updatedAt
     }
 
-    ACTIVITY_LOG {
+    ACTIVITY {
         ObjectId _id PK
         ObjectId workspaceId FK
         ObjectId userId FK
+        ObjectId projectId FK
+        ObjectId taskId FK
         string action
-        string entityType
-        ObjectId entityId
+        object metadata
         date createdAt
+        date updatedAt
     }
+```
 
-    NOTIFICATION {
-        ObjectId _id PK
-        ObjectId recipientId FK
-        ObjectId workspaceId FK
-        string title
-        string message
-        string type
-        boolean isRead
-        date createdAt
-    }
