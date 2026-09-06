@@ -1,5 +1,5 @@
 import { Queue, Worker } from "bullmq";
-import { redisConnection } from "../config/redis.js";
+import { redisConnection } from "../config/redis.config.js";
 import { sendInviteEmail } from "../services/email.service.js";
 
 const QUEUE_NAME = "email-queue";
